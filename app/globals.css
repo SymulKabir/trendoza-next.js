@@ -18,6 +18,12 @@
     --foreground: #ededed;
   }
 }
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F15A4A;
+  --color-secondary: #FF7A59;
+}
 
 body {
   background: var(--background);

@@ -1,0 +1,44 @@
+.hero-slider .swiper-pagination {
+  bottom: 20px !important;
+}
+
+.hero-slider .swiper-pagination-bullet {
+  width: 24px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.hero-slider .swiper-pagination-bullet-active {
+  width: 40px;
+  background: #f15a4a;
+}
+
+.hero-slider .swiper-button-prev,
+.hero-slider .swiper-button-next {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.209);
+  backdrop-filter: blur(3px);
+  padding: 8px;
+  color: #FFF;
+}
+
+.hero-slider .swiper-button-prev::after,
+.hero-slider .swiper-button-next::after {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.hero-slider .swiper-button-prev:hover,
+.hero-slider .swiper-button-next:hover {
+  background: #f15a4a;
+}
+
+.hero-slider .swiper-button-prev:hover::after,
+.hero-slider .swiper-button-next:hover::after {
+  color: white;
+}

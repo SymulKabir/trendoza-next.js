@@ -1,0 +1,8 @@
+theme: {
+  extend: {
+    colors: {
+      primary: "#F15A4A",
+      secondary: "#FF7A59",
+    },
+  },
+},
