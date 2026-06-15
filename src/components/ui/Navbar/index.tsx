@@ -38,10 +38,10 @@ const Index = () => {
             />
           </Link>
 
-          <button className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 hover:border-[#F15A4A] transition-colors">
+          <button className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 hover:border-[var(--primary-color)] transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 text-[#F15A4A]"
+              className="w-5 h-5 text-[var(--primary-color)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -77,14 +77,14 @@ const Index = () => {
                           placeholder:text-gray-400
                           focus:outline-none
                           focus:ring-2
-                          focus:ring-[#F15A4A]/20
-                          focus:border-[#F15A4A]
+                          focus:ring-[var(--primary-color)]/20
+                          focus:border-[var(--primary-color)]
                         "
               placeholder="Search for fish, seafood, crab..."
             />
             <button
               onClick={handleShowSearchResult}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F15A4A] cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[var(--primary-color)] cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@ const Index = () => {
           {/* How it Works */}
           <button
             onClick={() => navigate("/how-it-works")}
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +130,7 @@ const Index = () => {
           </button>
 
           {/* Login */}
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors cursor-pointer">
+          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5"
@@ -156,7 +156,7 @@ const Index = () => {
           {/* Cart */}
           <button
             onClick={handleCartDrawer}
-            className="relative flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 hover:border-[#F15A4A] hover:text-[#F15A4A] transition-all cursor-pointer"
+            className="relative flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@ const Index = () => {
             </svg>
 
             {/* Cart Count */}
-            <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-[11px] font-bold text-white bg-[#F15A4A] rounded-full">
+            <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-[11px] font-bold text-white bg-[var(--primary-color)] rounded-full">
               3
             </span>
           </button>
