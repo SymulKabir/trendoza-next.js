@@ -30,7 +30,7 @@ export default function HeroBanner() {
       >
         {banners.map((banner) => (
           <SwiperSlide key={banner.id}>
-            <div className="w-full aspect-video">
+            <div className="w-full aspect-[16/6] max-h-300">
               <img
                 src={`/assets/${banner.image}`}
                 alt={`Banner ${banner.id}`}

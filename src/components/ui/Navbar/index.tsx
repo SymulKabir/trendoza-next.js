@@ -1,13 +1,42 @@
-export default function Navbar() {
+"use client";
+import React, { useState } from "react";
+import AuthModal from "@/src/components/Modal/AuthModal";
+import CartDrawer from "@/src/components/Drawer/CartDrawer";
+import SearchResults from "@/src/components/ui/SearchResults";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+const Index = () => {
+  const [isOepnAuthModal, setIsOpenAuthModal] = useState(false);
+  const [isOpenCartDrawer, setIsOpenCartDrawer] = useState(false);
+  const [isShowSearchResult, setIsShowSearchResult] = useState(false);
+
+  const router = useRouter();
+
+  const handleAuthModal = () => {
+    setIsOpenAuthModal((pre) => !pre);
+  };
+  const handleCartDrawer = () => {
+    setIsOpenCartDrawer((pre) => !pre);
+  };
+  const handleShowSearchResult = () => {
+    setIsShowSearchResult((pre) => !pre);
+  };
+  const navigate = (path: string) => {
+    router.push(path);
+  };
+
   return (
-    <header className="bg-white border-b sticky top-0 z-50">
+    <header className="bg-white sticky top-0 z-50 primary-border primary-shadow">
       <div className="max-w-[1400px] mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-10">
-          <img
-            src="/assets/logo.svg"
-            alt="Logo"
-            className="w-[120px] h-[60px] object-contain"
-          />
+          <Link href="/">
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              className="w-[120px] h-[60px] object-contain"
+            />
+          </Link>
 
           <button className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 hover:border-[#F15A4A] transition-colors">
             <svg
@@ -27,9 +56,7 @@ export default function Navbar() {
             </svg>
 
             <div className="flex flex-col items-start leading-tight">
-              <span className="text-[11px] text-gray-500">
-                Please Select
-              </span>
+              <span className="text-[11px] text-gray-500">Please Select</span>
               <span className="text-sm font-semibold text-gray-900">
                 Your Location
               </span>
@@ -55,7 +82,10 @@ export default function Navbar() {
                         "
               placeholder="Search for fish, seafood, crab..."
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F15A4A]">
+            <button
+              onClick={handleShowSearchResult}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F15A4A] cursor-pointer"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5"
@@ -77,7 +107,10 @@ export default function Navbar() {
 
         <div className="flex items-center gap-6">
           {/* How it Works */}
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors">
+          <button
+            onClick={() => navigate("/how-it-works")}
+            className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors cursor-pointer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5"
@@ -97,7 +130,7 @@ export default function Navbar() {
           </button>
 
           {/* Login */}
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors">
+          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#F15A4A] transition-colors cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5"
@@ -117,11 +150,14 @@ export default function Navbar() {
                 d="M4 20a8 8 0 1116 0"
               />
             </svg>
-            <span>Login</span>
+            <span onClick={handleAuthModal}>Login</span>
           </button>
 
           {/* Cart */}
-          <button className="relative flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 hover:border-[#F15A4A] hover:text-[#F15A4A] transition-all">
+          <button
+            onClick={handleCartDrawer}
+            className="relative flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 hover:border-[#F15A4A] hover:text-[#F15A4A] transition-all cursor-pointer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-6 h-6"
@@ -146,6 +182,11 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      <SearchResults isOpen={isShowSearchResult} />
+      <CartDrawer onClose={handleCartDrawer} isOpen={isOpenCartDrawer} />
+      <AuthModal onClose={handleAuthModal} isOpen={isOepnAuthModal} />
     </header>
   );
-}
+};
+
+export default Index;

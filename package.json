@@ -2,6 +2,8 @@
   "name": "trendoza",
   "version": "0.1.0",
   "private": true,
+  "Nodejs": "v22.22.3",
+  "npm": "v10.9.8",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

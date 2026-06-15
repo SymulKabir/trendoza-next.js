@@ -6,12 +6,11 @@ import SignatureProduct from "@/src/components/ui/SignatureProduct";
 import ProductShowcase from "@/src/components/ui/ProductShowcase";
 import FAQAccordion from "@/src/components/ui/FAQAccordion";
 import Footer from "@/src/components/ui/Footer";
+import HeaderFooterLayout from "@/src/components/layout/HeaderFooterLayout";
 
 export default function HomePage() {
   return (
-    <main className="bg-[#f8f8f8] min-h-screen">
-      <Navbar />
-
+    <HeaderFooterLayout>
       <div className="max-w-[1400px] mx-10 px-4">
         <HeroBanner />
         <ProductCarousel />
@@ -20,8 +19,6 @@ export default function HomePage() {
         <ProductShowcase />
         <FAQAccordion />
       </div>
-
-      <Footer />
-    </main>
+    </HeaderFooterLayout>
   );
 }
