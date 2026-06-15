@@ -1,0 +1,24 @@
+model Product {
+  id            String           @id @default(uuid())
+  name          String
+  category      String
+  description   String?          @db.Text
+  stockStatus   String           @default("In Stock") // "In Stock" | "Out Of Stock"
+  badgeType     String           @default("None")
+  images        String[]         // Array of relative or absolute image URLs
+  availableCuts String[]         // Array of cut variations (e.g., ["Fry Cut", "Slices"])
+  variants      ProductVariant[] // One-to-many relationship mapping weight pricing scales
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id              String   @id @default(uuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  weight          String   // e.g., "500g"
+  cleanedWeight   String?  // e.g., "~400g - 450g"
+  originalPrice   Float
+  sellingPrice    Float
+  discountPercent Int
+}
