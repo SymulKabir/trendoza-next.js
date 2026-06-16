@@ -1,33 +1,48 @@
 export const addProductService = async (payload) => {
-    try {
-        const formData = new FormData();
+  try {
+    console.log("hello from server");
+    const formData = new FormData();
 
-        formData.append("name", payload.name);
-        formData.append("category", payload.category);
-        formData.append("description", payload.description);
-        formData.append("stockStatus", payload.stockStatus);
-        formData.append("badgeType", payload.badgeType);
+    formData.append("name", payload.name);
+    formData.append("category", payload.category);
+    formData.append("description", payload.description);
+    formData.append("stockStatus", payload.stockStatus);
+    formData.append("badgeType", payload.badgeType);
 
-        formData.append("availableCuts", JSON.stringify(payload.availableCuts));
-        formData.append("variants", JSON.stringify(payload.variants));
+    formData.append("availableCuts", JSON.stringify(payload.availableCuts));
+    formData.append("variants", JSON.stringify(payload.variants));
 
-        payload.images.forEach((img) => {
-            formData.append("images", img.file);
-        });
+    console.log("payload -->>", payload);
+    payload?.rawImageFiles?.forEach((img) => {
+      formData.append("images", img);
+    });
+    const response = await fetch("/api/product/add", {
+      method: "POST",
+      body: formData,
+    });
 
-        const response = await fetch("/api/product/add", {
-            method: "POST",
-            body: formData,
-        });
+    const result = await response.json();
 
-        if (!response.ok) {
-            throw new Error(`Server returned error status: ${response.status}`);
-        }
+    return result;
+  } catch (error) {
+    console.log("error -->", error);
+    return error;
+  }
+};
 
-        const result = await response.json();
-        return result
-
-    } catch (error) {
-        return error
-    }
+export const getProductService = async ({
+  pageNumber = 1,
+  limit = 10,
+  sortBy = "createdAt",
+  order = "desc",
+}) => {
+  try {
+    const res = await fetch(
+      `/api/product?page=${pageNumber}&limit=${limit}&sortBy=${sortBy}&order=${order}`,
+    );
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }  
 };
