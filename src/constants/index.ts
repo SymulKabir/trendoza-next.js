@@ -1,2 +1,1 @@
-export const DATABASE_URL =
-  "mysql://root:password@localhost:3306/library_db";
+export const DATABASE_URL="mysql://trendoza_user:12345@127.0.0.1:3306/trendoza";
