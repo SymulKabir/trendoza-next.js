@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/src/lib/db/connection";
-// import { uploadToCloudinary } from "@/src/utils/cloudinary"; // Example cloud storage util
 import fs from "fs";
 import path from "path";
 import { PRODUCT_DIR } from "@/src/constants/url";
@@ -10,6 +9,7 @@ export async function POST(request: Request) {
   try {
     // CRITICAL: Since data is multipart/form-data, extract it via request.formData()
     const formData = await request.formData();
+
 
     // 1. Extract plain text data fields
     const name = formData.get("name") as string;

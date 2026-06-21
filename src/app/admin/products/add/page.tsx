@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { ArrowLeft, Upload, Plus, Trash2, Save } from "lucide-react";
-import { addProductService } from "@/src/services/product";
+import { addProductService } from "@/src/services/product/client";
 import { successToast, warningToast } from "@/src/utils/toast";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@/src/hooks/useNavigate"
 
 interface ProductVariant {
   weight: string; // e.g., "500g" or "1.0kg"
@@ -45,7 +45,7 @@ const Index = () => {
     "With Skin",
     "Skinless",
   ];
-  const router = useRouter()
+  const { goTo } = useNavigate()
 
   // Multi-variant package list state (Supports the 500g / 1kg dynamic rows)
   const [variants, setVariants] = useState<ProductVariant[]>([
@@ -155,7 +155,7 @@ const Index = () => {
       console.log("data --->>>", data)
       if (data) {
         successToast("Product created successfully!");
-        router.push("/admin/products")
+        goTo("/admin/products")
       } else {
         warningToast("Failed to create product");
       }
@@ -405,11 +405,10 @@ const Index = () => {
                       key={cut}
                       type="button"
                       onClick={() => toggleCut(cut)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-tight border transition-all cursor-pointer ${
-                        isSelected
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-tight border transition-all cursor-pointer ${isSelected
                           ? "bg-indigo-50 border-indigo-300 text-indigo-600 shadow-3xs"
                           : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                      }`}
+                        }`}
                     >
                       {cut}
                     </button>
@@ -500,22 +499,20 @@ const Index = () => {
                   <button
                     type="button"
                     onClick={() => setStockStatus("In Stock")}
-                    className={`py-2 text-xs font-bold rounded-xl border text-center transition-all cursor-pointer ${
-                      stockStatus === "In Stock"
+                    className={`py-2 text-xs font-bold rounded-xl border text-center transition-all cursor-pointer ${stockStatus === "In Stock"
                         ? "bg-emerald-50 border-emerald-300 text-emerald-600 shadow-3xs"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
                     In Stock
                   </button>
                   <button
                     type="button"
                     onClick={() => setStockStatus("Out Of Stock")}
-                    className={`py-2 text-xs font-bold rounded-xl border text-center transition-all cursor-pointer ${
-                      stockStatus === "Out Of Stock"
+                    className={`py-2 text-xs font-bold rounded-xl border text-center transition-all cursor-pointer ${stockStatus === "Out Of Stock"
                         ? "bg-rose-50 border-rose-300 text-rose-600 shadow-3xs"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
                     Out of Stock
                   </button>

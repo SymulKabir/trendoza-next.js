@@ -1,3 +1,5 @@
+import { PRODUCT_DIR } from '@/src/constants/url';
+
 export const addProductService = async (payload) => {
   try {
     console.log("hello from server");
@@ -44,5 +46,29 @@ export const getProductService = async ({
     return data;
   } catch (err) {
     console.error(err);
-  }  
+  }
 };
+
+export const deleteProductService = async (ids: string[]) => {
+  try {
+    const res = await fetch(
+      `/api/product/delete2`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ ids })
+    }
+    );
+    if (!res.ok) {
+      return
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+

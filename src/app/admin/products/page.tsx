@@ -13,7 +13,11 @@ import {
 } from "lucide-react";
 import { getProductUrl } from "@/src/utils";
 import type { ProductItem } from "@/src/types/product";
-import { getProductService } from "@/src/services/product";
+import { deleteProductService, getProductService } from "@/src/services/product/client";
+import { useNavigate } from "@/src/hooks/useNavigate"
+import { successToast, warningToast } from "@/src/utils/toast";
+
+
 
 export default function ProductDashboard() {
   const [selectedAll, setSelectedAll] = useState(false);
@@ -24,11 +28,12 @@ export default function ProductDashboard() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
- 
+  const { goTo } = useNavigate()
+
   const fetchProducts = async (pageNumber = 1) => {
     try {
       setLoading(true);
- 
+
       const data = await getProductService({})
 
       setProducts(data.data || []);
@@ -76,6 +81,22 @@ export default function ProductDashboard() {
   const prevPage = () => {
     if (page > 1) fetchProducts(page - 1);
   };
+  const deleteProducts = async (ids: string[]) => {
+    try {
+
+      const { success, message, count } = deleteProductService(ids)
+      if (success) {
+        successToast(message)
+        const updateProduct = products.filter((product) => !ids.includes(product.id))
+        setProducts([...updateProduct])
+      } else {
+        warningToast("Failed to delete product")
+      }
+
+    } catch (error) {
+
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -95,7 +116,9 @@ export default function ProductDashboard() {
             See All
           </button>
 
-          <button className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-2xs cursor-pointer">
+          <button
+            onClick={() => goTo("/admin/products/add")}
+            className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-2xs cursor-pointer">
             <Plus size={14} />
             Add
           </button>
@@ -218,16 +241,18 @@ export default function ProductDashboard() {
                     <div className="flex justify-end items-center gap-3">
                       {/* DETAILS */}
                       <button className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer inline-flex items-center gap-1">
-                        <Eye size={12} /> 
+                        <Eye size={12} />
                       </button>
 
                       {/* EDIT */}
                       <button className="text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer inline-flex items-center gap-1">
-                        <Pencil size={12} /> 
+                        <Pencil size={12} />
                       </button>
 
                       {/* DELETE */}
-                      <button className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors cursor-pointer inline-flex items-center gap-1">
+                      <button
+                        onClick={() => deleteProducts([product.id])}
+                        className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors cursor-pointer inline-flex items-center gap-1">
                         <Trash2 size={12} />
                       </button>
                     </div>
@@ -255,11 +280,10 @@ export default function ProductDashboard() {
             <button
               key={i}
               onClick={() => fetchProducts(i + 1)}
-              className={`w-7 h-7 rounded-md text-xs font-bold ${
-                page === i + 1
-                  ? "bg-indigo-50 text-indigo-600 border border-indigo-100/40"
-                  : "text-slate-500 hover:bg-slate-100"
-              }`}
+              className={`w-7 h-7 rounded-md text-xs font-bold ${page === i + 1
+                ? "bg-indigo-50 text-indigo-600 border border-indigo-100/40"
+                : "text-slate-500 hover:bg-slate-100"
+                }`}
             >
               {i + 1}
             </button>
