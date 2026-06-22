@@ -12,43 +12,6 @@ datasource db {
   provider = "mysql"
 }
 
-// 1. Core Product Definition Model
-model Product {
-  id            String           @id @default(uuid())
-  name          String
-  category      String
-  description   String?          @db.Text
-  stockStatus   String           @default("In Stock")
-  badgeType     String           @default("None")
-  images        Json             
-  availableCuts Json             
-  variants      ProductVariant[] 
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-}
-
-// 2. Dynamic Weight Pricing Scale Variant Model
-model ProductVariant {
-  id              String   @id @default(uuid())
-  productId       String
-  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  weight          String   
-  cleanedWeight   String?  
-  originalPrice   Float
-  sellingPrice    Float
-  discountPercent Int
-}
 
 
-// 3. User Model
-model User {
-  id        String   @id @default(uuid())
-  name      String?
-  email     String   @unique
-  password  String
-  role      String   @default("USER")
-  isActive  Boolean  @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+ 

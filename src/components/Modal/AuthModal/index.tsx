@@ -98,12 +98,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const newErrors: FormErrors = {};
     const fieldsToValidate: (keyof FormErrors)[] = ["name", "email", "phone", "password", "confirmPassword"];
-    
+
     let isFormValid = true;
     const newTouched: Record<string, boolean> = {};
 
@@ -119,16 +119,52 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setTouched(newTouched);
     setErrors(newErrors);
 
+    // Replace your existing `if (isFormValid)` block in AuthModal.tsx with this:
+
     if (isFormValid) {
-      console.log("SUCCESSFULLY SUBMITTED SIGNUP DATA:", formData);
-      onClose(); 
+      try {
+        const response = await fetch("/api/user/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            password: formData.password,
+            isAdmin: formData.isAdmin, // The API maps this directly to "ADMIN" role
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          // You can handle this by setting a global form error state
+          alert(data.message || "Something went wrong during signup.");
+          return;
+        }
+
+        console.log("SUCCESSFULLY REGISTERED:", data.user);
+
+        // Reset form states and close modal
+        setFormData({
+          name: "", email: "", phone: "", password: "", confirmPassword: "", isAdmin: false
+        });
+        setTouched({});
+        onClose();
+
+      } catch (error) {
+        console.error("Network error running signup:", error);
+        alert("Network error. Please check your connection.");
+      }
     }
   };
 
   const getInputStyles = (fieldName: keyof FormErrors) => {
     const baseStyle = "w-full pl-3 text-sm font-medium text-slate-800 placeholder-stone-400 focus:outline-none bg-transparent";
     const containerBase = "relative flex items-center border rounded-xl px-4 py-2.5 transition-all bg-white shadow-xs focus-within:ring-2";
-    
+
     if (touched[fieldName] && errors[fieldName]) {
       return {
         container: `${containerBase} border-red-400 focus-within:border-red-500 focus-within:ring-red-100`,
@@ -149,12 +185,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      
+
       {/* MAIN MODAL CONTAINER */}
       <div className="relative w-full max-w-4xl max-h-[calc(100vh-2rem)] bg-white rounded-2xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-12 animate-in fade-in zoom-in-95 duration-200">
-        
+
         {/* FIXED CLOSE BUTTON - Accessible across breakpoints */}
-        <button 
+        <button
           onClick={onClose}
           type="button"
           className="absolute top-4 right-4 z-50 p-2 rounded-full bg-stone-100/80 hover:bg-stone-200/90 text-stone-600 hover:text-stone-900 transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-rose-400"
@@ -167,7 +203,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         <div className="relative md:col-span-5 bg-stone-900 overflow-hidden hidden md:flex flex-col justify-between p-8 text-white select-none">
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 z-10" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-stone-700 via-stone-900 to-black opacity-70" />
-          
+
           <div className="relative z-20 space-y-1 pt-8">
             <span className="block font-serif italic text-3xl md:text-4xl font-medium tracking-wide leading-tight">
               Your Fresh Catch
@@ -176,7 +212,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Is Waiting...
             </span>
           </div>
-          
+
           <p className="relative z-20 text-xs font-medium text-stone-300/90 leading-relaxed max-w-[220px] pb-4">
             Create an account to explore today&apos;s premium seafood selections immediately.
           </p>
@@ -184,7 +220,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         {/* RIGHT COLUMN: INTERACTIVE FORM INTERFACE */}
         <div className="col-span-1 md:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-stone-50/30 overflow-y-auto max-h-[calc(100vh-2rem)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          
+
           {/* HEADER SECTION: Clean layout centering logo and introductory typography together */}
           <div className="flex flex-col items-center text-center mt-2 mb-5">
             <div className="flex items-center gap-1.5 mb-2.5">
@@ -205,7 +241,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
           {/* Form Element */}
           <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
-            
+
             {/* NAME FIELD */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-slate-700 block pl-0.5">Full Name</label>
