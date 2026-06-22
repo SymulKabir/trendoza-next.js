@@ -38,3 +38,17 @@ model ProductVariant {
   sellingPrice    Float
   discountPercent Int
 }
+
+
+// 3. User Model
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  role      String   @default("USER")
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

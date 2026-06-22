@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { X, Minus, Plus, Zap } from "lucide-react";
-
+import MakePayment from "@/src/components/MakePayment"
 interface CartItem {
   id: number;
   title: string;
@@ -17,6 +17,7 @@ interface CartDrawerProps {
 }
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
+  const [makePaymentModalData, setMakePaymentModalData] = useState(null)
   // Populate exactly with the 4 items shown in your screenshot
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
@@ -69,14 +70,21 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const removeItem = (id: number) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
-
+  const closeMakePaymentModal = () => {
+    setMakePaymentModalData(null)
+  }
   // Dynamic calculations matches screenshot subtotal exactly (₹2029)
   const totalPrice = cartItems.reduce((acc, item) => acc + item.pricePerUnit * item.quantity, 0);
-
+  const procidToCheckOut = () => {
+    setMakePaymentModalData({
+      title: "#L2KS2K9SDF",
+      amount: 12
+    })
+  }
   return (
     <div className="fixed inset-0 z-50 overflow-hidden font-sans antialiased">
       {/* Dynamic Backdrop dim veil overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
@@ -84,12 +92,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
         {/* DRAWER CONTAINER */}
         <div className="w-screen max-w-md bg-white flex flex-col justify-between shadow-2xl rounded-l-2xl animate-in slide-in-from-right duration-300">
-          
+
           {/* TOP DRAWER HEADER FRAME */}
           <div className="p-4 border-b border-stone-100/80">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-slate-800 tracking-tight">My cart</h2>
-              <button 
+              <button
                 onClick={onClose}
                 className="p-1 rounded-md bg-[#fee2e2] text-[#f43f5e] hover:bg-[#fecdd3] transition-colors"
                 aria-label="Close cart"
@@ -97,7 +105,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <X size={15} strokeWidth={2.5} />
               </button>
             </div>
-            
+
             {/* Delivery Promise Timeline Pill */}
             <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 mt-1.5">
               <Zap size={12} className="fill-amber-500 text-amber-500" />
@@ -107,7 +115,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
           {/* INNER SCROLLABLE WORKSPACE AREA */}
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
-            
+
             {/* 20% OFF BANNER STRIP PROMO */}
             <div className="relative w-full aspect-[4.2/1] rounded-xl overflow-hidden bg-gradient-to-r from-[#d8b4fe] to-[#c084fc] p-3 flex flex-col justify-between shadow-xs text-purple-900 select-none">
               <div className="flex items-start justify-between">
@@ -125,7 +133,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <div className="space-y-4">
               {cartItems.map((item) => (
                 <div key={item.id} className="relative flex gap-3 pb-3 border-b border-stone-100">
-                  
+
                   {/* Thumbnail Container placeholder */}
                   <div className="w-16 h-12 bg-stone-100 border border-stone-200/60 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                     <span className="text-[9px] font-bold text-stone-400">Fresh</span>
@@ -143,7 +151,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     {/* Quantity Selector Stepper Element Row */}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center border border-stone-200 rounded-md bg-stone-50/50">
-                        <button 
+                        <button
                           onClick={() => updateQuantity(item.id, -1)}
                           className="px-2 py-1 text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors"
                         >
@@ -152,14 +160,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         <span className="px-2 text-xs font-bold text-slate-700 min-w-[16px] text-center">
                           {item.quantity}
                         </span>
-                        <button 
+                        <button
                           onClick={() => updateQuantity(item.id, 1)}
                           className="px-2 py-1 text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors"
                         >
                           <Plus size={10} strokeWidth={2.5} />
                         </button>
                       </div>
-                      
+
                       {/* Sub-Aggregated Line Item Total Value */}
                       <span className="text-xs font-bold text-slate-800">
                         ₹{item.pricePerUnit * item.quantity}
@@ -168,7 +176,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
 
                   {/* Remove cross trigger handle */}
-                  <button 
+                  <button
                     onClick={() => removeItem(item.id)}
                     className="absolute top-0 right-0 p-0.5 rounded-full bg-stone-100 text-stone-400 hover:text-stone-600 transition-colors"
                     aria-label="Remove item"
@@ -195,11 +203,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <span className="block text-[10px] text-stone-400 font-bold uppercase tracking-wider">Total</span>
               <span className="text-sm font-black text-slate-800">₹{totalPrice}</span>
             </div>
-            
+
             {/* Action Trigger Button */}
-            <button 
+            <button
               disabled={cartItems.length === 0}
               className="col-span-7 w-full bg-[#d6685e] hover:bg-[#cc5b51] disabled:bg-stone-300 text-white font-bold text-xs py-3 rounded-lg shadow-sm transition-colors uppercase tracking-wider text-center"
+              onClick={procidToCheckOut}
             >
               Proceed to Checkout
             </button>
@@ -207,6 +216,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
         </div>
       </div>
+      <MakePayment modalData={makePaymentModalData} closeModal={closeMakePaymentModal} />
     </div>
   );
 }
