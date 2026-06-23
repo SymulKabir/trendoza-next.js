@@ -36,7 +36,7 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
         return_url: `${window.location.origin}/dashboard/issue-history`,
       },
     });
-
+console.log("paymentIntent -->>", paymentIntent)
     if (error) {
       setErrorMessage(error.message || "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {

@@ -1,4 +1,3 @@
-// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
@@ -12,6 +11,219 @@ datasource db {
   provider = "mysql"
 }
 
+// 1. Core Product Definition Model
+model Product {
+  id            String           @id @default(uuid())
+  name          String
+  category      String
+  description   String?          @db.Text
+  stockStatus   String           @default("In Stock")
+  badgeType     String           @default("None")
+  images        Json             
+  availableCuts Json             
+  variants      ProductVariant[] 
+  cartItems     CartItem[]       // Added back-relation
+  wishlists     Wishlist[]       // Added back-relation
+  reviews       Review[]         // Added back-relation
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
 
+// 2. Dynamic Weight Pricing Scale Variant Model
+model ProductVariant {
+  id              String     @id @default(uuid())
+  productId       String
+  product         Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  weight          String   
+  cleanedWeight   String?  
+  originalPrice   Float
+  sellingPrice    Float
+  discountPercent Int
+  cartItems       CartItem[] // Added back-relation
+}
 
- 
+// User Model
+model User {
+  id        String     @id @default(uuid())
+  name      String?
+  email     String     @unique
+  password  String
+  phone     String
+  isActive  Boolean    @default(true)
+  addresses Address[]  // Added back-relation
+  carts     Cart[]     // Added back-relation
+  wishlists Wishlist[] // Added back-relation
+  orders    Order[]    // Added back-relation
+  reviews   Review[]   // Added back-relation
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Admin Model
+model Admin {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  phone     String
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName    String
+  phone       String
+
+  country     String
+  district    String
+  city        String
+  area        String
+  addressLine String
+
+  isDefault   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+}
+
+// Cart Model
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String         @id @default(uuid())
+  cartId    String
+  cart      Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product        @relation(fields: [productId], references: [id])
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  quantity  Int            @default(1)
+}
+
+// Wishlist Model
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// Order Model
+model Order {
+  id             String        @id @default(uuid())
+  orderNumber    String        @unique
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  subtotal       Float
+  shippingCharge Float
+  discountAmount Float
+  totalAmount    Float
+  paymentStatus  PaymentStatus @default(PENDING)
+  orderStatus    OrderStatus   @default(PENDING)
+  paymentMethod  String
+  items          OrderItem[]
+  payment        Payment?      // Added back-relation (1-to-1 relation)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  productName  String
+  productImage String
+  weight       String
+  quantity     Int
+  unitPrice    Float
+  totalPrice   Float
+}
+
+// Payment Model
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique
+  order         Order         @relation(fields: [orderId], references: [id])
+  gateway       String
+  transactionId String?
+  amount        Float
+  status        PaymentStatus @default(PENDING)
+
+  createdAt     DateTime      @default(now())
+}
+
+// Coupon Model
+model Coupon {
+  id              String   @id @default(uuid())
+  code            String   @unique
+  discountType    String
+  discountValue   Float
+  minimumAmount   Float?
+  maximumDiscount Float?
+  usageLimit      Int?
+  usedCount       Int      @default(0)
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+}
+
+// Review Model
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int
+  comment   String?  @db.Text
+
+  createdAt DateTime @default(now())
+}
+
+// Banner Model
+model Banner {
+  id        String   @id @default(uuid())
+  title     String
+  image     String
+  link      String?
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}

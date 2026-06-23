@@ -72,3 +72,24 @@ export const deleteProductService = async (ids: string[]) => {
 };
 
 
+// Add this inside your client services module directory
+
+export async function updateCartService(payload: {
+  productId: string;
+  variantId: string;
+  quantity: number;
+}) {
+  const response = await fetch("/api/cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not modify the remote cart status data.");
+  }
+
+  return response.json();
+}

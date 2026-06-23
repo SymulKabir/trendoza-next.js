@@ -1,4 +1,4 @@
-// 1. Core Product Definition Model
+ // 1. Core Product Definition Model
 model Product {
   id            String           @id @default(uuid())
   name          String

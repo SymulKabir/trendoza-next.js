@@ -123,7 +123,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     if (isFormValid) {
       try {
-        const response = await fetch("/api/user/signup", {
+        const url = formData.isAdmin ? "/api/admin/signup": "/api/user/signup"
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,0 +1,15 @@
+// Banner Model
+
+model Banner {
+  id          String   @id @default(uuid())
+
+  title       String
+
+  image       String
+
+  link        String?
+
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+}

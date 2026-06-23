@@ -1,0 +1,20 @@
+// Settings Model
+model SiteSetting {
+  id               String @id @default(uuid())
+
+  siteName         String
+
+  supportEmail     String
+
+  supportPhone     String
+
+  logo             String?
+
+  favicon          String?
+
+  facebook         String?
+  instagram        String?
+  youtube          String?
+
+  shippingCharge   Float  @default(0)
+}

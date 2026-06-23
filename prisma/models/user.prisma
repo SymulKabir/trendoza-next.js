@@ -4,9 +4,28 @@ model User {
   name      String?
   email     String   @unique
   password  String
-  role      String   @default("USER")
+  phone      String
   isActive  Boolean  @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName    String
+  phone       String
+
+  country     String
+  district    String
+  city        String
+  area        String
+  addressLine String
+
+  isDefault   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
 }
