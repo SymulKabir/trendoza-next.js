@@ -12,6 +12,7 @@ import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
 import { useSelector, useDispatch } from "react-redux";
 import { adminHeader } from "@/src/utils/headers";
 import { setUserLoading, setUserSession } from "@/src/store/client/authSlice";
+import { adminAuthService } from "@/src/services/admin/client";
 
 interface SignInFormProps {
   onSuccess?: (user: any) => void;
@@ -40,37 +41,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const { user, admin, isAuthenticatedUser, isAuthenticatedAdmin } =
-    useSelector((state: RootState) => state.auth);
 
-  const dispatch = useDispatch();
-
-  console.log("user ---->>>", user);
-
-  useEffect(() => {
-    const fetchSessionOnRefresh = async () => {
-      try {
-        dispatch(setUserLoading(true));
-
-        const response = await fetch("/api/admin/auth", {
-          method: "GET",
-          headers: {
-            ...adminHeader(),
-          },
-        });
-
-        const data = await response.json();
-        console.log("data --->>>", data);
-        if (data.user) {
-          dispatch(setUserSession(data.user));
-        }
-      } catch (error) {
-      } finally {
-        dispatch(setUserLoading(false));
-      }
-    };
-    fetchSessionOnRefresh();
-  }, []);
 
   const validateField = (name: string, value: string): string => {
     let error = "";

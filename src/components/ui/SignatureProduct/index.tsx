@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Bell, ArrowRight, Minus, Plus } from "lucide-react";
 import { useNavigate } from "@/src/hooks/useNavigate";
-import { getProductService, updateCartService } from "@/src/services/product/client";
+import {
+  getProductService,
+  updateCartService,
+} from "@/src/services/product/client";
+import { getProductUrl } from "@/src/utils";
 
 interface ProductImage {
   name: string;
@@ -45,15 +49,15 @@ export default function SignatureSeafood() {
     try {
       setLoading(true);
       const response = await getProductService({});
-      
+
       if (response && response.data) {
         setProducts(response.data);
-        
+
         const initialQuantities: Record<string, number> = {};
         response.data.forEach((p: ProductItem) => {
-          // Defaults client memory to 0. 
+          // Defaults client memory to 0.
           // Optional: If getProductService includes current user cart logs, initialize values from there.
-          initialQuantities[p.id] = 0; 
+          initialQuantities[p.id] = 0;
         });
         setQuantities(initialQuantities);
       }
@@ -69,10 +73,15 @@ export default function SignatureSeafood() {
   }, []);
 
   // Updated operation execution block mapping directly back to the database
-  const handleQuantityAdjustment = async (product: ProductItem, delta: number) => {
+  const handleQuantityAdjustment = async (
+    product: ProductItem,
+    delta: number,
+  ) => {
     const activeVariant = product.variants?.[0];
     if (!activeVariant) {
-      alert("This item does not have an active variant option configuration configured.");
+      alert(
+        "This item does not have an active variant option configuration configured.",
+      );
       return;
     }
 
@@ -127,12 +136,14 @@ export default function SignatureSeafood() {
           const activeVariant = product.variants?.[0];
           const originalPrice = activeVariant ? activeVariant.originalPrice : 0;
           const sellingPrice = activeVariant ? activeVariant.sellingPrice : 0;
-          const discountPercent = activeVariant ? activeVariant.discountPercent : 0;
+          const discountPercent = activeVariant
+            ? activeVariant.discountPercent
+            : 0;
           const weightLabel = activeVariant ? `/${activeVariant.weight}` : "";
 
           const primaryImageFilename = product.images?.[0]?.name;
-          const imageSrc = primaryImageFilename 
-            ? `/uploads/${primaryImageFilename}` 
+          const imageSrc = primaryImageFilename
+            ? `/uploads/${primaryImageFilename}`
             : "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=60";
 
           const isOutOfStock = product.stockStatus !== "In Stock";
@@ -144,18 +155,20 @@ export default function SignatureSeafood() {
             >
               <div className="relative w-full h-40 rounded-xl overflow-hidden bg-slate-50 group">
                 <Image
-                  src={imageSrc}
+                  src={getProductUrl(product.images)}
                   alt={product.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 220px"
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
 
-                {product.badgeType && product.badgeType !== "None" && !isOutOfStock && (
-                  <span className="absolute top-2 left-2 text-[9px] font-bold tracking-wide uppercase bg-amber-500 text-white px-2 py-0.5 rounded-md shadow-sm">
-                    {product.badgeType}
-                  </span>
-                )}
+                {product.badgeType &&
+                  product.badgeType !== "None" &&
+                  !isOutOfStock && (
+                    <span className="absolute top-2 left-2 text-[9px] font-bold tracking-wide uppercase bg-amber-500 text-white px-2 py-0.5 rounded-md shadow-sm">
+                      {product.badgeType}
+                    </span>
+                  )}
 
                 {isOutOfStock && (
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px] flex items-start justify-center pt-2">
@@ -184,7 +197,7 @@ export default function SignatureSeafood() {
                         </button>
                         <span>{qty}</span>
                         <button
-                          onClick={() => handleQuantityAdjustment(product, 1)} 
+                          onClick={() => handleQuantityAdjustment(product, 1)}
                           className="hover:opacity-80"
                         >
                           <Plus size={12} strokeWidth={3} />
@@ -201,7 +214,10 @@ export default function SignatureSeafood() {
                     {product.name}
                   </h3>
                   <span className="text-[10px] text-slate-400 font-medium block mt-1">
-                    {product.category} {activeVariant?.cleanedWeight ? `| ${activeVariant.cleanedWeight}` : ""}
+                    {product.category}{" "}
+                    {activeVariant?.cleanedWeight
+                      ? `| ${activeVariant.cleanedWeight}`
+                      : ""}
                   </span>
                 </div>
 

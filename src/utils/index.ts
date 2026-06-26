@@ -31,8 +31,7 @@ export const modifyFilename = (
 export const getProductUrl = (
   info: ProductImage | ProductImage[] | null | undefined,
 ) => {
-  const baseUrl = "/api/media/product";
-  console.log("info -------->>>>>", info)
+  const baseUrl = "/api/media/product"; 
 
   if (!info) return null;
 

@@ -195,7 +195,7 @@ export default function ProductDashboard() {
                         <img
                           className="w-full h-full"
                           src={
-                            getProductUrl(product.images) || "/placeholder.png"
+                            getProductUrl(product.images)
                           }
                           alt=""
                         />

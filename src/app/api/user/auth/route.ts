@@ -11,8 +11,7 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
     if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.split(" ")[1];
-    }
-    console.log("token -->>", token);
+    } 
     // 2. Fallback: Read tokens directly from standard client cookies if header isn't passed
     if (!token) {
       const cookieStore = await cookies();
@@ -39,8 +38,8 @@ export async function GET(request: Request) {
     }
 
     // 5. Query the database depending on the encoded role inside the token
-    if (decoded.role === "ADMIN") {
-      const admin = await db.admin.findUnique({
+    if (decoded.role === "USER") {
+      const admin = await db.user.findUnique({
         where: { id: decoded.id },
         select: { id: true, name: true, email: true }, // Filter out password securely
       });

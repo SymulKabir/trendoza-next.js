@@ -5,13 +5,22 @@ import CartDrawer from "@/src/components/Drawer/CartDrawer";
 import SearchResults from "@/src/components/ui/SearchResults";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/store/client/store";
 
 const Index = () => {
-  const [isOepnAuthModal, setIsOpenAuthModal] = useState(false);
+  const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
   const [isOpenCartDrawer, setIsOpenCartDrawer] = useState(false);
   const [isShowSearchResult, setIsShowSearchResult] = useState(false);
+  const { user, admin, isAuthenticatedUser, isAuthenticatedAdmin } =
+    useSelector((state: RootState) => state.auth);
 
   const router = useRouter();
+
+  console.log("user ---->>>", user);
+  console.log("admin ---->>>", admin);
+  console.log("isAuthenticatedUser ---->>>", isAuthenticatedUser);
+  console.log("isAuthenticatedAdmin ---->>>", isAuthenticatedAdmin);
 
   const handleAuthModal = () => {
     setIsOpenAuthModal((pre) => !pre);
@@ -130,28 +139,51 @@ const Index = () => {
           </button>
 
           {/* Login */}
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 20a8 8 0 1116 0"
-              />
-            </svg>
-            <span onClick={handleAuthModal}>Login</span>
-          </button>
+          {!isAuthenticatedAdmin && !isAuthenticatedUser && (
+            <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 20a8 8 0 1116 0"
+                />
+              </svg>
+              <span onClick={handleAuthModal}>Login</span>
+            </button>
+          )}
+
+          {(isAuthenticatedAdmin || isAuthenticatedUser) && (
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() =>
+                  navigate(
+                    isAuthenticatedAdmin ? "/admin/products" : "/user/profile",
+                  )
+                }
+                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer"
+              >
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center border border-gray-300">
+                  {/* You could render user.name[0] here */}
+                  <span className="text-xs font-bold text-gray-600">
+                    {isAuthenticatedAdmin ? "A" : "U"}
+                  </span>
+                </div>
+                <span>{isAuthenticatedAdmin ? "Admin" : "Profile"}</span>
+              </button>
+            </div>
+          )}
 
           {/* Cart */}
           <button
@@ -184,7 +216,7 @@ const Index = () => {
       </div>
       <SearchResults isOpen={isShowSearchResult} />
       <CartDrawer onClose={handleCartDrawer} isOpen={isOpenCartDrawer} />
-      <AuthModal onClose={handleAuthModal} isOpen={isOepnAuthModal} />
+      <AuthModal onClose={handleAuthModal} isOpen={isOpenAuthModal} />
     </header>
   );
 };

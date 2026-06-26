@@ -16,10 +16,13 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("hello 1")
     // 2. Fetch the existing admin record from the DB
     const adminUser = await db.admin.findUnique({
       where: { email: email.toLowerCase() },
     });
+
+    console.log("adminUser -->>", adminUser)
 
     // 3. Fail early if account doesn't exist
     // Note: We use a generic message to limit data harvesting risks
