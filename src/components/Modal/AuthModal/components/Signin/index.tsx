@@ -9,13 +9,11 @@ import React, {
 } from "react";
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
-import { useSelector, useDispatch } from "react-redux";
-import { adminHeader } from "@/src/utils/headers";
-import { setUserLoading, setUserSession } from "@/src/store/client/authSlice";
-import { adminAuthService } from "@/src/services/admin/client";
+import { successToast } from "@/src/utils/toast";
 
 interface SignInFormProps {
-  onSuccess?: (user: any) => void;
+  onClose?: (user: any) => void;
+  setPageView?: (user: any) => void;
 }
 
 interface FormState {
@@ -29,7 +27,10 @@ interface FormErrors {
   password?: string;
 }
 
-export default function SignInForm({ onSuccess }: SignInFormProps) {
+export default function SignInForm({
+  onClose,
+  setPageView,
+}: SignInFormProps) {
   const [formData, setFormData] = useState<FormState>({
     email: "",
     password: "",
@@ -41,7 +42,6 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-
 
   const validateField = (name: string, value: string): string => {
     let error = "";
@@ -133,10 +133,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         }
 
         console.log("SUCCESSFULLY SIGNED IN:", data.user);
-
-        if (onSuccess) {
-          onSuccess(data.user);
-        }
+ 
         if (data.token) {
           if (url.includes("admin")) {
             setAdminToken(data.token);
@@ -144,6 +141,8 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
             setUserToken(data.token);
           }
         }
+        successToast("Account login successfully!")
+        onClose()
       } catch (error) {
         console.error("Network error running signin:", error);
         setSubmitError("Network error. Please check your internet connection.");
@@ -278,6 +277,20 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           "Sign In"
         )}
       </button>
+      <div className="text-center pt-2">
+        <p className="text-xs text-slate-500">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setPageView("sign-up");
+            }}
+            className="text-rose-500 font-bold hover:underline"
+          >
+            Create an account
+          </button>
+        </p>
+      </div>
     </form>
   );
 }

@@ -1,6 +1,6 @@
-export const adminAuthService = async () => {
+export const getCartItemService = async () => {
   try { 
-    const response = await fetch("/api/admin/auth", {
+    const response = await fetch("/api/cart/protected/get", {
       method: "GET"
     });
     if (!response.ok) return;

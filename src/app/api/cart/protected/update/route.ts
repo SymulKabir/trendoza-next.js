@@ -1,25 +1,34 @@
-// src/app/api/cart/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/src/lib/db/connection"; // Using your verified db instance export
+import { headers } from "next/headers";
 
-export async function POST(request: Request) {
+export const POST = async (request: Request) => {
   try {
+    const headerList = await headers();
+    const userId = headerList.get("x-user-id"); 
     const body = await request.json();
     const { productId, variantId, quantity } = body;
 
-    if (!productId || !variantId || quantity === undefined) {
-      return NextResponse.json({ success: false, message: "Missing fields" }, { status: 400 });
+    if (!productId || !variantId || quantity === undefined || !userId) {
+      return NextResponse.json(
+        { success: false, message: "Missing fields" },
+        { status: 400 },
+      );
     }
 
-    // 1. GET A REAL USER FROM YOUR DATABASE
-    // If you are not using Auth.js/NextAuth session hooks yet, grab an existing user ID dynamically:
-    const fallbackUser = await db.user.findFirst();
-    
+    const fallbackUser = await db.user.findUnique({
+      where: {id: userId}
+    });
+
     if (!fallbackUser) {
-      return NextResponse.json({ 
-        success: false, 
-        message: "No users found in your database. Please register/create a user profile first." 
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "No users found in your database. Please register/create a user profile first.",
+        },
+        { status: 404 },
+      );
     }
 
     const activeUserId = fallbackUser.id; // Resolves your P2003 constraint issues instantly
@@ -40,7 +49,10 @@ export async function POST(request: Request) {
       await db.cartItem.deleteMany({
         where: { cartId: cart.id, productId, variantId },
       });
-      return NextResponse.json({ success: true, message: "Item dropped successfully" });
+      return NextResponse.json({
+        success: true,
+        message: "Item dropped successfully",
+      });
     }
 
     const existingCartItem = await db.cartItem.findFirst({
@@ -58,9 +70,15 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json({ success: true, message: "Cart synced successfully" });
+    return NextResponse.json({
+      success: true,
+      message: "Cart synced successfully",
+    });
   } catch (error: any) {
     console.error("Cart synchronization error:", error);
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 },
+    );
   }
-}
+};

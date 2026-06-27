@@ -266,8 +266,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </div>
 
           {/* Form Element */}
-          {pageView === "sign-up" && <Signup />}
-          {pageView === "sign-in" && <Signin />}
+          {pageView === "sign-up" && <Signup onClose={onClose}  setPageView={setPageView} />}
+          {pageView === "sign-in" && <Signin onClose={onClose}  setPageView={setPageView} />}
 
           {/* Compliance Footer Disclaimer */}
           <div className="mt-5 text-center">

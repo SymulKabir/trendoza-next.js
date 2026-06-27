@@ -1,4 +1,5 @@
-import { PRODUCT_DIR } from '@/src/constants/url';
+import { PRODUCT_DIR } from "@/src/constants/url";
+import { adminHeader, userHeader } from "@/src/utils/headers";
 
 export const addProductService = async (payload) => {
   try {
@@ -18,7 +19,7 @@ export const addProductService = async (payload) => {
     payload?.rawImageFiles?.forEach((img) => {
       formData.append("images", img);
     });
-    const response = await fetch("/api/product/add", {
+    const response = await fetch("/api/product/protected/add", {
       method: "POST",
       body: formData,
     });
@@ -51,17 +52,15 @@ export const getProductService = async ({
 
 export const deleteProductService = async (ids: string[]) => {
   try {
-    const res = await fetch(
-      `/api/product/delete2`, {
+    const res = await fetch(`/api/product/protected/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       // body: JSON.stringify({ ids })
-    }
-    );
+    });
     if (!res.ok) {
-      return
+      return;
     }
 
     const data = await res.json();
@@ -71,7 +70,6 @@ export const deleteProductService = async (ids: string[]) => {
   }
 };
 
-
 // Add this inside your client services module directory
 
 export async function updateCartService(payload: {
@@ -79,7 +77,7 @@ export async function updateCartService(payload: {
   variantId: string;
   quantity: number;
 }) {
-  const response = await fetch("/api/cart", {
+  const response = await fetch("/api/cart/protected/update", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

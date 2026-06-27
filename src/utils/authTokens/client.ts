@@ -1,7 +1,6 @@
+import { ADMIN_TOKEN_KEY, USER_TOKEN_KEY } from "@/src/constants";
 import Cookies from "js-cookie";
- 
-const USER_TOKEN_KEY = "trendoza-user-token";
-const ADMIN_TOKEN_KEY = "trendoza-admin-token";
+   
  
 const COOKIE_OPTIONS: Cookies.CookieAttributes = {
   expires: 1,       // 1 day expiration

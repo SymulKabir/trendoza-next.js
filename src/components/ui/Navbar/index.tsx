@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthModal from "@/src/components/Modal/AuthModal";
 import CartDrawer from "@/src/components/Drawer/CartDrawer";
 import SearchResults from "@/src/components/ui/SearchResults";
@@ -7,20 +7,29 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store/client/store";
+import { useSearchParams } from "next/navigation";
 
 const Index = () => {
   const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
   const [isOpenCartDrawer, setIsOpenCartDrawer] = useState(false);
   const [isShowSearchResult, setIsShowSearchResult] = useState(false);
-  const { user, admin, isAuthenticatedUser, isAuthenticatedAdmin } =
-    useSelector((state: RootState) => state.auth);
+  const { isAuthenticatedUser, isAuthenticatedAdmin } = useSelector(
+    (state: RootState) => state.auth,
+  );
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (!isAuthenticatedAdmin && !isAuthenticatedUser) {
+      const authQuery = searchParams.get("auth");
+      if (authQuery && authQuery === "sing-in") {
+        handleAuthModal();
+      }
+    }
+  }, []);
 
   const router = useRouter();
-
-  console.log("user ---->>>", user);
-  console.log("admin ---->>>", admin);
-  console.log("isAuthenticatedUser ---->>>", isAuthenticatedUser);
-  console.log("isAuthenticatedAdmin ---->>>", isAuthenticatedAdmin);
 
   const handleAuthModal = () => {
     setIsOpenAuthModal((pre) => !pre);
@@ -209,7 +218,7 @@ const Index = () => {
 
             {/* Cart Count */}
             <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-[11px] font-bold text-white bg-[var(--primary-color)] rounded-full">
-              3
+              {cartItems.length}
             </span>
           </button>
         </div>

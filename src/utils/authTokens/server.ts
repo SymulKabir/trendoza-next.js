@@ -1,20 +1,23 @@
 import jwt from "jsonwebtoken";
- 
+
 interface TokenPayload {
   id: string;
   email: string;
   role: string;
 }
 
- 
-export const generateToken = ({ id, email, role }: TokenPayload): string | null => {
+export const generateToken = ({
+  id,
+  email,
+  role,
+}: TokenPayload): string | null => {
   try {
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       console.error("JWT_SECRET environment variable is missing.");
       return null;
     }
- 
+
     return jwt.sign(
       {
         id,
@@ -22,23 +25,21 @@ export const generateToken = ({ id, email, role }: TokenPayload): string | null 
         role,
       },
       jwtSecret,
-      { expiresIn: "12d" }  
+      { expiresIn: "12d" },
     );
   } catch (error) {
     console.error("Error generating token:", error);
     return null;
   }
 };
- 
+
 export const verifyToken = (token: string): TokenPayload | null => {
   try {
     const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      console.error("JWT_SECRET environment variable is missing.");
+    if (!jwtSecret || !token) { 
       return null;
-    }
+    } 
 
-    // jwt.verify automatically handles checking if the signature matches and if it has expired
     const decoded = jwt.verify(token, jwtSecret) as TokenPayload;
     return decoded;
   } catch (error) {
@@ -47,3 +48,4 @@ export const verifyToken = (token: string): TokenPayload | null => {
     return null;
   }
 };
+ 

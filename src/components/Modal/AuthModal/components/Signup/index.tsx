@@ -2,9 +2,10 @@
 
 import React, { useState, ChangeEvent, FocusEvent, FormEvent } from "react";
 import { X, Eye, EyeOff, Check, AlertCircle } from "lucide-react";
+import { successToast } from "@/src/utils/toast";
 
 interface AuthModalProps {
-  isOpen: boolean;
+  setPageView: () => void;
   onClose: () => void;
 }
 
@@ -25,7 +26,7 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-export default function Index() {
+export default function Index({ onClose, setPageView }: AuthModalProps) {
   const [formData, setFormData] = useState<FormState>({
     name: "",
     email: "",
@@ -39,7 +40,6 @@ export default function Index() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
- 
 
   const validateField = (
     name: string,
@@ -177,6 +177,7 @@ export default function Index() {
         });
         setTouched({});
         onClose();
+        successToast("Account created successfully!");
       } catch (error) {
         console.error("Network error running signup:", error);
         alert("Network error. Please check your connection.");
@@ -371,6 +372,20 @@ export default function Index() {
       >
         Sign Up
       </button>
+      <div className="text-center pt-2">
+        <p className="text-xs text-slate-500">
+          Have an account?{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setPageView("sign-in");
+            }}
+            className="text-rose-500 font-bold hover:underline"
+          >
+            Sing In
+          </button>
+        </p>
+      </div>
     </form>
   );
 }
