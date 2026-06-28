@@ -7,26 +7,26 @@ import {
   setAdminSession,
   setUserLoading,
   setUserSession,
-} from "@/src/store/client/authSlice"; 
+} from "@/src/store/client/authSlice";
 import { adminAuthService } from "@/src/services/admin/client";
 import { userAuthService } from "@/src/services/user/client";
 import { getCartItemService } from "@/src/services/cart";
-import { setCart } from "@/src/store/client/cartSlice";
+import { setCart, setCartId } from "@/src/store/client/cartSlice";
 import { setLoadingProduct, setProducts } from "@/src/store/client/productSlice";
 import { getProductService } from "@/src/services/product/client";
 
 const Index = ({ children }: { children: React.ReactNode }) => {
-  const {  isAuthenticatedUser, isAuthenticatedAdmin } =
-    useSelector((state: RootState) => state.auth); 
+  const { isAuthenticatedUser, isAuthenticatedAdmin } =
+    useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
- 
+
   useEffect(() => {
     (async () => {
       if (isAuthenticatedAdmin || isAuthenticatedUser) return;
       try {
         initAuth();
         initCartItem();
-      } catch (error) {}
+      } catch (error) { }
     })();
   }, []);
 
@@ -54,33 +54,40 @@ const Index = ({ children }: { children: React.ReactNode }) => {
     }
   };
   const fetchProducts = async () => {
-  dispatch(setLoadingProduct(true));
-  try {
-    const response = await getProductService{});
-    if (response) {
-      dispatch(setProducts({ 
-        data: response.data, 
-        meta: { 
-          page: response.page, 
-          limit: response.limit, 
-          total: response.total, 
-          totalPages: response.totalPages 
-        } 
-      }));
+    dispatch(setLoadingProduct(true));
+    try {
+      const response = await getProductService();
+      if (response) {
+        dispatch(setProducts({
+          data: response.data,
+          meta: {
+            page: response.page,
+            limit: response.limit,
+            total: response.total,
+            totalPages: response.totalPages
+          }
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      dispatch(setLoadingProduct(false));
     }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    dispatch(setLoadingProduct(false));
-  }
-};
+  };
   const initCartItem = async () => {
     try {
       const result = await getCartItemService(); // This returns { success: true, data: [...] }
 
-      if (result?.success && Array.isArray(result.data)) {
-        dispatch(setCart(result.data));
+      if (result?.success) {
+        if (Array.isArray(result.data)) {
+          dispatch(setCart(result.data));
+        }
+        if (result.cartId) {
+          dispatch(setCartId(result.cartId)); 
+        }
       }
+
+
     } catch (error) {
       console.error("Cart fetch failed", error);
     }

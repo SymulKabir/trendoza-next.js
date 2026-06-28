@@ -45,6 +45,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: flatItems, // Now this is just an array of items
+      cartId: cart.id,
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, message: "Server Error" }, { status: 500 });

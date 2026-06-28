@@ -3,8 +3,8 @@ import { adminAuthMiddleware, userAuthMiddleware } from "./middlewares/auth";
 import { headerModifyMiddleware } from "./middlewares/updateHeader";
 
 const USER_PROTECTED_ROUTES = {
-  page: [],
-  api: ["/api/cart/protected/:path*", "/api/user/auth"],
+  page: ["/dashboard/:path*"],
+  api: ["/api/cart/protected/:path*", "/api/user/auth", "/api/order/get"],
 };
 const ADMIN_PROTECTED_ROUTES = {
   page: ["/admin/:path*"],
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
     )
   ) {
     return await userAuthMiddleware({ request, isPage: false });
-  } 
+  }
   return NextResponse.next({
     request: {
       headers: request.headers,
@@ -61,10 +61,13 @@ export const config = {
   matcher: [
     "/api/product",
     "/api/user/auth",
+    "/api/order/get",
     "/api/admin/auth",
     "/api/cart/protected/:path*",
     "/api/user/protected/:path*",
     "/api/admin/:path*",
     "/admin/:path*",
+    "/dashboard/:path*",
+
   ],
 };

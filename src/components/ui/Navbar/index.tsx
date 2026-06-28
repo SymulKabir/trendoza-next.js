@@ -178,7 +178,7 @@ const Index = () => {
               <button
                 onClick={() =>
                   navigate(
-                    isAuthenticatedAdmin ? "/admin/products" : "/user/profile",
+                    isAuthenticatedAdmin ? "/admin/products" : "/dashboard/order",
                   )
                 }
                 className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer"

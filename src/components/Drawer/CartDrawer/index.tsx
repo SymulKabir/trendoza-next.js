@@ -37,9 +37,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [makePaymentModalData, setMakePaymentModalData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const cartId = useSelector((state: RootState) => state.cart.cartId);
+
+
+  console.log("cartId --->>", cartId)
+  const { user } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const dispatch = useDispatch();
   const updateQuantity = async (item: CartItem, delta: number) => {
     const targetQty = item.quantity + delta;
+
 
     // Optimistic Update in Redux
     dispatch(
@@ -69,7 +77,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       );
     }
   };
- 
+
 
   const closeMakePaymentModal = () => {
     setMakePaymentModalData(null);
@@ -81,10 +89,18 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   }, 0);
 
   const procidToCheckOut = () => {
-    setMakePaymentModalData({
+    const modalData = {
+      cartId: cartId,
       title: "#L2KS2K9SDF",
       amount: totalPrice,
-    });
+      userId: user?.id,
+      cartItems: cartItems,
+      subtotal: totalPrice,
+      shippingCharge: 0,
+      discountAmount: 0,
+      totalAmount: totalPrice,
+    }
+    setMakePaymentModalData(modalData);
   };
 
   if (!isOpen) return null;

@@ -10,12 +10,14 @@ interface CartItem {
 }
 
 interface CartState {
+  cartId: string | null;
   items: CartItem[];
   isSyncing: boolean; // Tracks if the UI is updating with the backend
   error: string | null;
 }
 
 const initialState: CartState = {
+  cartId: null,
   items: [],
   isSyncing: false,
   error: null,
@@ -24,10 +26,14 @@ const initialState: CartState = {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: { 
+  reducers: {
+    setCartId: (state, action) => {
+      state.cartId = action.payload;
+
+    },
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
-    }, 
+    },
     updateQuantity: (state, action: PayloadAction<{ productId: string, variantId: string, quantity: number }>) => {
       const { productId, variantId, quantity } = action.payload;
       const existingItem = state.items.find(
@@ -47,9 +53,10 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.items = [];
+      state.cartId = null;
     }
   },
 });
 
-export const { setCart, updateQuantity, setSyncing, clearCart } = cartSlice.actions;
+export const { setCart, updateQuantity, setSyncing, clearCart, setCartId } = cartSlice.actions;
 export default cartSlice.reducer;

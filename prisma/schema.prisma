@@ -150,8 +150,6 @@ model OrderItem {
   orderId      String
   order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId    String
-  productName  String
-  productImage String
   weight       String
   quantity     Int
   unitPrice    Float

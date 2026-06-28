@@ -7,9 +7,11 @@ import {
 import { useMemo, useState } from "react";
 // import { BiLockAlt } from "react-icons/bi";
 // import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { successToast } from "@/src/utils/toast";
+import { successToast, warningToast } from "@/src/utils/toast";
 // import { studentHeader } from "@/src/utils/header";
 import { Lock, Loader2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/src/store/client/cartSlice";
 interface ComponentProps {
   modalData: any;
   closeModal: () => void;
@@ -20,6 +22,7 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const dispatch = useDispatch()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,23 +37,49 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
       redirect: "if_required",
       confirmParams: {
         return_url: `${window.location.origin}/dashboard/issue-history`,
+        payment_method_data: {
+          billing_details: {
+            name: modalData?.name || "Guest User",
+            email: modalData?.email || "guest@example.com",
+            phone: modalData?.phone || "0000000000", // Add this missing field
+          },
+        },
       },
     });
-console.log("paymentIntent -->>", paymentIntent)
+    console.log("paymentIntent -->>", paymentIntent)
+    console.log("error from payment ====>>>>", error)
     if (error) {
       setErrorMessage(error.message || "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       const transactionId = paymentIntent.id;
-      // const res = await fetch("/api/make-payment", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ ...modalData, transactionId }),
-      // });
-      // const { success, message } = await res.json();
-      setIsProcessing(false);
-      closeModal({ reloadData: true });
+      console.log("Payment success --->>")
+      console.log("transactionId --->>", transactionId)
 
-      successToast("Your payment has been completed successfully.");
+      // Make the API call
+      const res = await fetch("/api/order/make-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: modalData.userId, // Ensure this exists
+          cartId: modalData.cartId, // Ensure this exists
+          items: modalData.cartItems, // Map your cart items here
+          subtotal: modalData.subtotal,
+          shippingCharge: modalData.shippingCharge,
+          discountAmount: modalData.discountAmount,
+          totalAmount: modalData.totalAmount,
+          paymentMethod: "Stripe",
+          transactionId: transactionId,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        successToast("Order placed successfully!");
+        closeModal({ reloadData: true });
+        dispatch(clearCart)
+      } else {
+        warningToast("Payment successful but order creation failed.");
+      } 
     }
     setIsProcessing(false);
   };

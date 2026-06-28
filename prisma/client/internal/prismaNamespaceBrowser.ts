@@ -210,8 +210,6 @@ export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   productId: 'productId',
-  productName: 'productName',
-  productImage: 'productImage',
   weight: 'weight',
   quantity: 'quantity',
   unitPrice: 'unitPrice',
@@ -416,8 +414,6 @@ export const OrderItemOrderByRelevanceFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   productId: 'productId',
-  productName: 'productName',
-  productImage: 'productImage',
   weight: 'weight'
 } as const
 
