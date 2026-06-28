@@ -12,6 +12,8 @@ import { adminAuthService } from "@/src/services/admin/client";
 import { userAuthService } from "@/src/services/user/client";
 import { getCartItemService } from "@/src/services/cart";
 import { setCart } from "@/src/store/client/cartSlice";
+import { setLoadingProduct, setProducts } from "@/src/store/client/productSlice";
+import { getProductService } from "@/src/services/product/client";
 
 const Index = ({ children }: { children: React.ReactNode }) => {
   const {  isAuthenticatedUser, isAuthenticatedAdmin } =
@@ -51,6 +53,27 @@ const Index = ({ children }: { children: React.ReactNode }) => {
       dispatch(setAdminLoading(false));
     }
   };
+  const fetchProducts = async () => {
+  dispatch(setLoadingProduct(true));
+  try {
+    const response = await getProductService{});
+    if (response) {
+      dispatch(setProducts({ 
+        data: response.data, 
+        meta: { 
+          page: response.page, 
+          limit: response.limit, 
+          total: response.total, 
+          totalPages: response.totalPages 
+        } 
+      }));
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    dispatch(setLoadingProduct(false));
+  }
+};
   const initCartItem = async () => {
     try {
       const result = await getCartItemService(); // This returns { success: true, data: [...] }
