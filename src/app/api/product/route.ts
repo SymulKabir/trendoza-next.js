@@ -26,20 +26,20 @@ export async function GET(request: Request) {
         ...(category ? { category } : {}),
         ...(name
           ? {
-              name: {
-                contains: name,
-              },
-            }
+            name: {
+              contains: name,
+            },
+          }
           : {}),
       },
       include: {
         variants: true,
         cartItems: userId
           ? {
-              where: {
-                cart: { userId: userId },
-              },
-            }
+            where: {
+              cart: { userId: userId },
+            },
+          }
           : false,
       },
       orderBy: {
@@ -49,29 +49,23 @@ export async function GET(request: Request) {
       take: limit,
     });
 
- 
-    const productWithCartCount = await products.map((item) => {
-      let cartItemCount = 0
-      const currentItem = { ...item };
-      delete currentItem["cartItems"]; 
-      if (item?.cartItems && item?.cartItems[0]?.quantity) {
-        cartItemCount = item?.cartItems[0]?.quantity
-      }
 
+    const data = products.map((item) => {
+      const { cartItems, ...productWithoutCartItems } = item;
       return {
-        ...currentItem,
-        cartItemCount,
+        ...productWithoutCartItems,
+        cartItemCount: item.cartItems?.[0]?.quantity || 0,
       };
-    }); 
+    });
     const total = await db.product.count({
       where: {
         ...(category ? { category } : {}),
         ...(name
           ? {
-              name: {
-                contains: name,
-              },
-            }
+            name: {
+              contains: name,
+            },
+          }
           : {}),
       },
     });
@@ -83,7 +77,7 @@ export async function GET(request: Request) {
       total,
       skip,
       totalPages: Math.ceil(total / limit),
-      data: productWithCartCount,
+      data: data,
     });
   } catch (error: any) {
     console.error("GET products error:", error);
