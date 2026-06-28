@@ -1,47 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { Bell, ArrowRight, Minus, Plus } from "lucide-react";
+import React, { useEffect, useState } from "react"; 
+import {  ArrowRight } from "lucide-react";
 import { useNavigate } from "@/src/hooks/useNavigate";
 import {
-  getProductService,
-  updateCartService,
+  getProductService, 
 } from "@/src/services/product/client";
 import ProductCard from "@/src/components/ui/ProductCard";
-import { ProductItem } from "@/src/types/product";
-import { useSelector } from "react-redux";
-import { RootState } from "@/src/store/client/store";
+import { ProductItem } from "@/src/types/product"; 
 
 const Index = () => {
-  const [products, setProducts] = useState<ProductItem[]>([]);
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [products, setProducts] = useState<ProductItem[]>([]); 
   const [loading, setLoading] = useState(false);
-  const { goTo } = useNavigate();
-    const cartItems = useSelector((state: RootState) => state.cart.items);
-  
-  
-  useEffect(() => {
-  if (cartItems.length) {
-    
-  }
-  
-  }, [cartItems])
-
-  console.log("quantities --->>", quantities);
+  const { goTo } = useNavigate(); 
+ 
+ 
   const fetchProducts = async () => {
     try {
       setLoading(true);
       const response = await getProductService({});
 
       if (response && response.data) {
-        setProducts(response.data);
-
-        const initialQuantities: Record<string, number> = {};
-        response.data.forEach((p: ProductItem) => {
-          initialQuantities[p.id] = 0;
-        });
-        setQuantities(initialQuantities);
+        setProducts(response.data); 
       }
     } catch (err) {
       console.error("Error loading products:", err);
@@ -80,9 +60,8 @@ const Index = () => {
           return (
             <ProductCard
               key={product.id}
-              product={product}
-              quantities={quantities}
-              setQuantities={setQuantities}
+              product={product} 
+              setProducts={setProducts} 
             />
           );
         })}

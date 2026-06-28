@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/src/lib/db/connection";
+import { headers } from "next/headers";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const headerList = await headers();
+    const userId = headerList.get("x-user-id");
 
     // pagination
     const page = Number(searchParams.get("page") || 1);
@@ -31,6 +34,13 @@ export async function GET(request: Request) {
       },
       include: {
         variants: true,
+        cartItems: userId
+          ? {
+              where: {
+                cart: { userId: userId },
+              },
+            }
+          : false,
       },
       orderBy: {
         [sortBy]: order,
@@ -39,6 +49,20 @@ export async function GET(request: Request) {
       take: limit,
     });
 
+ 
+    const productWithCartCount = await products.map((item) => {
+      let cartItemCount = 0
+      const currentItem = { ...item };
+      delete currentItem["cartItems"]; 
+      if (item?.cartItems && item?.cartItems[0]?.quantity) {
+        cartItemCount = item?.cartItems[0]?.quantity
+      }
+
+      return {
+        ...currentItem,
+        cartItemCount,
+      };
+    }); 
     const total = await db.product.count({
       where: {
         ...(category ? { category } : {}),
@@ -59,7 +83,7 @@ export async function GET(request: Request) {
       total,
       skip,
       totalPages: Math.ceil(total / limit),
-      data: products,
+      data: productWithCartCount,
     });
   } catch (error: any) {
     console.error("GET products error:", error);

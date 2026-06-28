@@ -3,17 +3,15 @@ import { getProductUrl } from "@/src/utils";
 import { Bell, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { ProductItem } from "@/src/types/product";
-import { updateCartService } from "@/src/services/product/client"; 
+import { updateCartService } from "@/src/services/product/client";
 
-const Index = ({ product, quantities, setQuantities }: any) => {
-  const qty = quantities[product.id] || 0;
+const Index = ({ product, setProducts }: any) => {
   const activeVariant = product.variants?.[0];
   const originalPrice = activeVariant ? activeVariant.originalPrice : 0;
   const sellingPrice = activeVariant ? activeVariant.sellingPrice : 0;
   const discountPercent = activeVariant ? activeVariant.discountPercent : 0;
   const weightLabel = activeVariant ? `/${activeVariant.weight}` : "";
   const isOutOfStock = product.stockStatus !== "In Stock";
-
 
   const handleQuantityAdjustment = async (
     product: ProductItem,
@@ -27,31 +25,31 @@ const Index = ({ product, quantities, setQuantities }: any) => {
       return;
     }
 
-    const currentQty = quantities[product.id] || 0;
+    const currentQty = product.cartItemCount;
     const targetQty = Math.max(0, currentQty + delta);
 
-    // 1. Optimistic Update (Immediate UI response)
-    setQuantities((prev) => ({
-      ...prev,
-      [product.id]: targetQty,
-    }));
+    setProducts((state: any) => {
+      const updatePro = state.map((item: any) => {
+        if (item.id === product.id) {
+          item.cartItemCount = targetQty || 0;
+        }
 
-    // 2. Synchronize background values safely with the Database API
+        return { ...item };
+      });
+
+      return [...updatePro];
+    }); 
     try {
       await updateCartService({
         productId: product.id,
         variantId: activeVariant.id,
         quantity: targetQty,
       });
-    } catch (error) {
-      console.error("Database sync failed, reverting UI state:", error);
-      // Revert state back on error
-      setQuantities((prev) => ({
-        ...prev,
-        [product.id]: currentQty,
-      }));
+    } catch (error) { 
     }
   };
+
+  console.log("product --->>", product);
 
   return (
     <div
@@ -83,7 +81,7 @@ const Index = ({ product, quantities, setQuantities }: any) => {
 
         {!isOutOfStock && (
           <div className="absolute bottom-2 right-2 z-10">
-            {qty === 0 ? (
+            {!product.cartItemCount ? (
               <button
                 onClick={() => handleQuantityAdjustment(product, 1)}
                 className="w-7 h-7 flex items-center justify-center bg-white rounded-lg shadow-md text-rose-500 font-bold hover:bg-rose-50 transition-colors border border-slate-100"
@@ -98,7 +96,7 @@ const Index = ({ product, quantities, setQuantities }: any) => {
                 >
                   <Minus size={12} strokeWidth={3} />
                 </button>
-                <span>{qty}</span>
+                <span>{product.cartItemCount}</span>
                 <button
                   onClick={() => handleQuantityAdjustment(product, 1)}
                   className="hover:opacity-80"

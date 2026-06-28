@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuthMiddleware, userAuthMiddleware } from "./middlewares/auth";
+import { headerModifyMiddleware } from "./middlewares/updateHeader";
 
 const USER_PROTECTED_ROUTES = {
   page: [],
@@ -10,8 +11,19 @@ const ADMIN_PROTECTED_ROUTES = {
   api: ["/api/product/protected/:path*", "/api/admin/auth"],
 };
 
+const UPDATE_HEADER_ROUTES = ["/api/product"];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  let requestHeaders = new Headers(request.headers);
+
+  if (UPDATE_HEADER_ROUTES.some((route) => pathname.startsWith(route))) {
+    requestHeaders = await headerModifyMiddleware({ request });
+  }
+
+  request = new NextRequest(request, {
+    headers: requestHeaders,
+  });
 
   if (
     ADMIN_PROTECTED_ROUTES.page.some((route) =>
@@ -35,14 +47,19 @@ export async function middleware(request: NextRequest) {
     USER_PROTECTED_ROUTES.api.some((route) =>
       pathname.startsWith(route.replace(":path*", "")),
     )
-  ) { 
+  ) {
     return await userAuthMiddleware({ request, isPage: false });
-  }
-  return NextResponse.next();
+  } 
+  return NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 }
 
 export const config = {
   matcher: [
+    "/api/product",
     "/api/user/auth",
     "/api/admin/auth",
     "/api/cart/protected/:path*",

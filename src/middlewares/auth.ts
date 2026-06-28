@@ -31,7 +31,7 @@ export const adminAuthMiddleware = async ({
     }
 
     throw Error("Unauthorized");
-  } catch (error) { 
+  } catch (error) {
     if (isPage) {
       return NextResponse.redirect(new URL(REDIRECT_PATH, request.url));
     } else {
@@ -39,7 +39,7 @@ export const adminAuthMiddleware = async ({
     }
   }
 };
-export  const userAuthMiddleware = async ({
+export const userAuthMiddleware = async ({
   request,
   isPage = false,
 }: {
@@ -47,21 +47,21 @@ export  const userAuthMiddleware = async ({
   isPage?: boolean;
 }) => {
   try {
-    const token = (await request.cookies.get(USER_TOKEN_KEY)?.value) || null; 
+    const token = (await request.cookies.get(USER_TOKEN_KEY)?.value) || null;
 
-    console.log("token form user auth -=========================>>>>>>>>", token)
+   
     if (!token) {
       throw Error("Token not fund");
     }
 
-    console.log("token ======>>>>", token)
+    console.log("token ======>>>>", token);
     const res = await fetch(`${BACKEND_URL}/api/auth/check-token`, {
       method: "GET",
       headers: { authorization: `Bearer ${token}` },
     });
 
     const data = await res.json();
-console.log("data  for middle ware--->>", data)
+    console.log("data  for middle ware--->>", data);
 
     if (data?.user) {
       const requestHeaders = new Headers(request.headers);
