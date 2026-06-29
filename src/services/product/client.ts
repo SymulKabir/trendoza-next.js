@@ -57,7 +57,7 @@ export const deleteProductService = async (ids: string[]) => {
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify({ ids })
+      body: JSON.stringify({ ids })
     });
     if (!res.ok) {
       return;

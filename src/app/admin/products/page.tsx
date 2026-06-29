@@ -175,7 +175,8 @@ export default function ProductDashboard() {
                 </td>
               </tr>
             ) : (
-              products.map((product) => (
+              <>
+              {!!products.length && products.map((product) => (
                 <tr
                   key={product.id}
                   className="hover:bg-slate-50/40 transition-colors group"
@@ -258,7 +259,7 @@ export default function ProductDashboard() {
                     </div>
                   </td>
                 </tr>
-              ))
+              ))}</>
             )}
           </tbody>
         </table>

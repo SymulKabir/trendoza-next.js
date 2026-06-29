@@ -55,7 +55,7 @@ console.log("state ------------------>>>>", products)
 
         {/* PRODUCTS RESPONSIVE GRID GRID LAYOUT */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => <ProductCard product={product}/>)}
+          {!!products.length && products.map((product) => <ProductCard product={product}/>)}
         </div>
 
         {/* BOTTOM SUBTEXT PROMPT SECTION */}

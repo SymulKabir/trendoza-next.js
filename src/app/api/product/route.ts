@@ -50,13 +50,13 @@ export async function GET(request: Request) {
     });
 
 
-    const data = products.map((item) => {
+    const data =products.length ? products.map((item) => {
       const { cartItems, ...productWithoutCartItems } = item;
       return {
         ...productWithoutCartItems,
         cartItemCount: item.cartItems?.[0]?.quantity || 0,
       };
-    });
+    }) : ""
     const total = await db.product.count({
       where: {
         ...(category ? { category } : {}),
