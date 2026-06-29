@@ -1,17 +1,25 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { getProductUrl } from "@/src/utils";
 import { Bell, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { ProductItem } from "@/src/types/product";
 import { updateCartService } from "@/src/services/product/client";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/src/store/client/store";
+import { setCart, updateResyncing } from "@/src/store/client/cartSlice";
+import { useNavigate } from "@/src/hooks/useNavigate";
+import { updateSingleProduct } from "@/src/store/client/productSlice";
 
-const Index = ({ product, setProducts }: any) => {
+const Index = ({ product }: any) => {
   const activeVariant = product.variants?.[0];
   const originalPrice = activeVariant ? activeVariant.originalPrice : 0;
   const sellingPrice = activeVariant ? activeVariant.sellingPrice : 0;
   const discountPercent = activeVariant ? activeVariant.discountPercent : 0;
   const weightLabel = activeVariant ? `/${activeVariant.weight}` : "";
   const isOutOfStock = product.stockStatus !== "In Stock";
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
+  const { goTo } = useNavigate(); 
 
   const handleQuantityAdjustment = async (
     product: ProductItem,
@@ -27,29 +35,42 @@ const Index = ({ product, setProducts }: any) => {
 
     const currentQty = product.cartItemCount;
     const targetQty = Math.max(0, currentQty + delta);
-
-    setProducts((state: any) => {
-      const updatePro = state.map((item: any) => {
-        if (item.id === product.id) {
-          item.cartItemCount = targetQty || 0;
-        }
-
-        return { ...item };
-      });
-
-      return [...updatePro];
-    }); 
+    const updateProduct = { ...product, cartItemCount: targetQty || 0 };
+    dispatch(updateSingleProduct(updateProduct));
+    
     try {
       await updateCartService({
         productId: product.id,
         variantId: activeVariant.id,
         quantity: targetQty,
       });
-    } catch (error) { 
-    }
-  };
+      let newCartItem = true;
+      let updateCartItems = [];
+      if (targetQty > 0) {
+        updateCartItems = await cartItems.map((cartItem: any) => {
+          if (cartItem.productId === product.id) {
+            newCartItem = false;
+            return { ...cartItem, quantity: targetQty };
+          }
 
-  console.log("product --->>", product);
+          return { ...cartItem };
+        });
+      } else {
+        updateCartItems = await cartItems.filter((cartItem: any) => {
+          if (cartItem.productId === product.id) {
+            newCartItem = false;
+          }
+          return cartItem.productId !== product.id;
+        });
+      }
+      console.log("newCartItem -->>>", newCartItem);
+      if (newCartItem) {
+        dispatch(updateResyncing());
+      } else {
+        dispatch(setCart(updateCartItems));
+      }
+    } catch (error) {}
+  };
 
   return (
     <div
@@ -111,7 +132,10 @@ const Index = ({ product, setProducts }: any) => {
 
       <div className="flex-1 flex flex-col justify-between mt-3">
         <div>
-          <h3 className="text-xs font-semibold text-slate-700 line-clamp-2 h-8 leading-tight">
+          <h3
+            className="text-xs font-semibold text-slate-700 line-clamp-2 h-8 leading-tight"
+            onClick={() => goTo(`/product/${product.id}`)}
+          >
             {product.name}
           </h3>
           <span className="text-[10px] text-slate-400 font-medium block mt-1">

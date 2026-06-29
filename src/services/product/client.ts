@@ -91,3 +91,10 @@ export async function updateCartService(payload: {
 
   return response.json();
 }
+
+
+export const fetchProductByIdService = async (productId: string) => {
+  const response = await fetch(`/api/product/${productId}`);
+  if (!response.ok) throw new Error("Failed to fetch product");
+  return response.json();
+};

@@ -27,7 +27,6 @@ const productSlice = createSlice({
     setLoadingProduct: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    // Set the entire list (for initial fetch)
     setProducts: (
       state,
       action: PayloadAction<{ data: ProductItem[]; meta: any }>,
@@ -40,7 +39,16 @@ const productSlice = createSlice({
         totalPages: action.payload.meta.totalPages,
       };
     },
-    // Add a single product to the existing list
+    updateSingleProduct: (state, action) => {
+      if (!action.payload) return;
+
+      state.items = state.items.map((product: any) => {
+        if (action.payload.id === product.id) {
+          return {...product, ...action.payload}
+        }
+        return { ...product };
+      });
+    },
     addProduct: (state, action: PayloadAction<ProductItem>) => {
       state.items.push(action.payload);
     },
@@ -57,6 +65,7 @@ const productSlice = createSlice({
 export const {
   setLoadingProduct,
   setProducts,
+  updateSingleProduct,
   addProduct,
   updateProductInList,
 } = productSlice.actions;

@@ -18,6 +18,8 @@ const Index = () => {
   );
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
+
+  console.log("cartItems --->>", cartItems)
   const searchParams = useSearchParams();
 
   useEffect(() => {

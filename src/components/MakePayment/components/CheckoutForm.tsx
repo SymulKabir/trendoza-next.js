@@ -4,11 +4,8 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useMemo, useState } from "react";
-// import { BiLockAlt } from "react-icons/bi";
-// import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { successToast, warningToast } from "@/src/utils/toast";
-// import { studentHeader } from "@/src/utils/header";
+import { useMemo, useState } from "react"; 
+import { successToast, warningToast } from "@/src/utils/toast"; 
 import { Lock, Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/src/store/client/cartSlice";
@@ -76,7 +73,7 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
       if (data.success) {
         successToast("Order placed successfully!");
         closeModal({ reloadData: true });
-        dispatch(clearCart)
+        dispatch(clearCart())
       } else {
         warningToast("Payment successful but order creation failed.");
       } 

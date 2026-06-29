@@ -1,6 +1,5 @@
 "use client";
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -10,30 +9,64 @@ import {
   Leaf,
   Lightbulb,
 } from "lucide-react";
+import { fetchProductByIdService } from "@/src/services/product/client";
+import { getProductUrl } from "@/src/utils";
 
-const Index = () => {
-  const [selectedWeight, setSelectedWeight] = useState<"500g" | "1kg">("500g");
-  const [selectedCut, setSelectedCut] = useState<"fry" | "slices" | "whole">(
-    "whole",
-  );
+const ProductDetails = ({ productId }: { productId: string }) => {
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [selectedWeight, setSelectedWeight] = useState<any>(null);
+  const [selectedCut, setSelectedCut] = useState<string>("whole");
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchProductByIdService(productId);
+        setProduct(data);
+        // Set default variant if available
+        if (data.variants?.length > 0) setSelectedWeight(data.variants[0]);
+      } catch (err) {
+        setError("Could not load product details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (productId) loadProduct();
+  }, [productId]);
+
+  if (loading)
+    return <div className="py-20 text-center">Loading product details...</div>;
+  if (error || !product)
+    return (
+      <div className="py-20 text-center text-rose-500">
+        {error || "Product not found"}
+      </div>
+    );
 
   return (
     <div className="w-full min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* LEFT COLUMN: PRODUCT IMAGES */}
         <div className="lg:col-span-4 space-y-4">
           <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-stone-100 shadow-sm border border-stone-100">
-            {/* Placeholder for Main Image from Screenshot 2026-06-15 at 11.01.40 AM.jpg */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-stone-200 to-stone-50 flex flex-col items-center justify-center text-center p-4">
-              <span className="text-stone-400 font-medium text-sm">
-                Main Product Display
-              </span>
-              <p className="text-xs text-stone-400 mt-1 max-w-[200px]">
-                Premium White Pomfret with Lemon & Herbs
-              </p>
-            </div>
+            {/* Product Image */}
+            {product.images ? (
+              <img
+                src={getProductUrl(product.images)}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-tr from-stone-200 to-stone-50 flex flex-col items-center justify-center text-center p-4">
+                <span className="text-stone-400 font-medium text-sm">
+                  No Image Available
+                </span>
+              </div>
+            )}
 
-            {/* Navigational Slider Caret Right */}
+            {/* Navigational Slider Caret Right (Visible only if there are multiple images) */}
             <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors">
               &#10095;
             </button>
@@ -51,12 +84,10 @@ const Index = () => {
           {/* Product Title Heading */}
           <div className="space-y-2">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-800 leading-snug">
-              Premium White Pomfret (Paplet) – Sea Fresh - Medium
+              {product.name}
             </h1>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Premium sea-caught White Pomfret known for its delicate flavour,
-              soft texture, and premium quality. Perfect for fry, grill, and
-              curry. Cleaned and ready to cook.
+              {product?.description}
             </p>
           </div>
 
@@ -70,117 +101,81 @@ const Index = () => {
           {/* Weight Tier Configuration Options */}
           <div className="space-y-3">
             {/* Option: 500g */}
-            <div
-              onClick={() => setSelectedWeight("500g")}
-              className={`relative flex items-center justify-between p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
-                selectedWeight === "500g"
-                  ? "border-[#10b981] bg-[#f0fdf4]/40"
-                  : "border-slate-200 bg-white hover:border-slate-300"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative flex items-center justify-center">
-                  {selectedWeight === "500g" ? (
-                    <CheckCircle2
-                      size={18}
-                      className="text-[#10b981] fill-[#10b981]/10"
-                    />
-                  ) : (
-                    <div className="w-[18px] h-[18px] rounded-full border-2 border-slate-300" />
-                  )}
-                </div>
-                <div>
-                  <span className="block font-bold text-sm text-slate-800">
-                    500g
-                  </span>
-                  <span className="block text-[11px] text-slate-400 mt-0.5">
-                    After cleaning ~400g – 450g
-                  </span>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="block text-xs line-through text-slate-400 font-medium">
-                  ₹800
-                </span>
-                <span className="text-base font-bold text-slate-800">
-                  ₹700{" "}
-                  <span className="text-xs text-rose-500 font-semibold ml-0.5">
-                    12% off
-                  </span>
-                </span>
-              </div>
-            </div>
-
-            {/* Option: 1.0kg */}
-            <div
-              onClick={() => setSelectedWeight("1kg")}
-              className={`relative flex items-center justify-between p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
-                selectedWeight === "1kg"
-                  ? "border-[#10b981] bg-[#f0fdf4]/40"
-                  : "border-slate-200 bg-white hover:border-slate-300"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative flex items-center justify-center">
-                  {selectedWeight === "1kg" ? (
-                    <CheckCircle2
-                      size={18}
-                      className="text-[#10b981] fill-[#10b981]/10"
-                    />
-                  ) : (
-                    <div className="w-[18px] h-[18px] rounded-full border-2 border-slate-300" />
-                  )}
-                </div>
-                <div>
-                  <span className="block font-bold text-sm text-slate-800">
-                    1.0kg
-                  </span>
-                  <span className="block text-[11px] text-slate-400 mt-0.5">
-                    After cleaning ~800g – 900g
-                  </span>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="block text-xs line-through text-slate-400 font-medium">
-                  ₹1599
-                </span>
-                <span className="text-base font-bold text-slate-800">
-                  ₹1400{" "}
-                  <span className="text-xs text-rose-500 font-semibold ml-0.5">
-                    12% off
-                  </span>
-                </span>
-              </div>
-            </div>
+            {!!product?.variants?.length &&
+              product.variants.map((variant: any, index: number) => {
+                console.log("variant --->>>", variant);
+                return (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedWeight(variant.weight)}
+                    className={`relative flex items-center justify-between p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
+                      selectedWeight === variant.weight
+                        ? "border-[#10b981] bg-[#f0fdf4]/40"
+                        : "border-slate-200 bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative flex items-center justify-center">
+                        {selectedWeight === variant.weight ? (
+                          <CheckCircle2
+                            size={18}
+                            className="text-[#10b981] fill-[#10b981]/10"
+                          />
+                        ) : (
+                          <div className="w-[18px] h-[18px] rounded-full border-2 border-slate-300" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="block font-bold text-sm text-slate-800">
+                          {variant.weight}
+                        </span>
+                        <span className="block text-[11px] text-slate-400 mt-0.5">
+                          After cleaning {variant.cleanedWeight}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-xs line-through text-slate-400 font-medium">
+                        {`₹${variant.originalPrice}`}
+                      </span>
+                      <span className="text-base font-bold text-slate-800">
+                        {`₹${variant.sellingPrice}`}
+                        <span className="text-xs text-rose-500 font-semibold ml-0.5">
+                          {`${variant.discountPercent}% off`}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
 
           {/* Cooking Cut Styles Layout Selection */}
-          <div className="space-y-2">
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { id: "fry", name: "Fry Cut" },
-                { id: "slices", name: "Slices" },
-                { id: "whole", name: "Whole Cleaned" },
-              ].map((cut) => (
-                <div
-                  key={cut.id}
-                  onClick={() => setSelectedCut(cut.id as any)}
-                  className={`cursor-pointer rounded-lg p-1 text-center transition-all ${
-                    selectedCut === cut.id
-                      ? "ring-2 ring-slate-800 ring-offset-1"
-                      : "opacity-80 hover:opacity-100"
-                  }`}
-                >
-                  <div className="aspect-video w-full bg-stone-100 rounded-md mb-1.5 flex items-center justify-center text-[10px] text-stone-400 font-medium border border-stone-200/60">
-                    {cut.name} Box
+          {!!product?.availableCuts?.length && (
+            <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-3">
+                {product.availableCuts?.map((cut) => (
+                  <div
+                    key={cut}
+                    onClick={() => setSelectedCut(cut as any)}
+                    className={`cursor-pointer rounded-lg p-1 text-center transition-all ${
+                      selectedCut === cut
+                        ? "ring-2 ring-slate-800 ring-offset-1"
+                        : "opacity-80 hover:opacity-100"
+                    }`}
+                  >
+                    <div className="aspect-video w-full bg-stone-100 rounded-md mb-1.5 flex items-center justify-center text-[10px] text-stone-400 font-medium border border-stone-200/60">
+                      {cut} Box
+                    </div>
+                    <span className="text-[11px] font-bold text-slate-700 tracking-tight">
+                      {cut}
+
+                    </span>
                   </div>
-                  <span className="text-[11px] font-bold text-slate-700 tracking-tight">
-                    {cut.name}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Stock Alert Warning Label & Interface elements */}
           <div className="space-y-3 pt-2">
@@ -225,7 +220,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-1 bg-white/80 backdrop-blur-sm border border-emerald-200/50 px-2.5 py-1 rounded-full text-[10px] font-bold text-[#10b981] shadow-2xs">
                 <ShieldCheck size={11} />
-                <span>Fishlo Freshness Control™</span>
+                <span>{product?.category}</span>
               </div>
             </div>
 
@@ -301,4 +296,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default ProductDetails;

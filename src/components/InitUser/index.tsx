@@ -12,38 +12,52 @@ import { adminAuthService } from "@/src/services/admin/client";
 import { userAuthService } from "@/src/services/user/client";
 import { getCartItemService } from "@/src/services/cart";
 import { setCart, setCartId } from "@/src/store/client/cartSlice";
-import { setLoadingProduct, setProducts } from "@/src/store/client/productSlice";
+import {
+  setLoadingProduct,
+  setProducts,
+} from "@/src/store/client/productSlice";
 import { getProductService } from "@/src/services/product/client";
 
 const Index = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticatedUser, isAuthenticatedAdmin } =
-    useSelector((state: RootState) => state.auth);
+  const { isAuthenticatedUser, isAuthenticatedAdmin } = useSelector(
+    (state: RootState) => state.auth,
+  );
+  const cartReSyncing = useSelector((state: RootState) => state.cart.reSyncing);
   const dispatch = useDispatch();
 
   useEffect(() => {
-  const initApp = async () => {
-    try {
-      // 1. Always load Auth first
-      await initAuth(); 
-      // 2. Load Cart and Products in parallel after auth is attempted
-      await Promise.all([initCartItem(), fetchProducts()]);
-    } catch (error) {
-      console.error("Initialization failed", error);
-    }
-  };
+    const initApp = async () => {
+      try {
+        if (!isAuthenticatedAdmin && !isAuthenticatedUser) {
+          await initAuth();
+        }
 
-  if (!isAuthenticatedAdmin && !isAuthenticatedUser) {
-    initApp();
-  }
-}, []);
+        await Promise.all([fetchProducts()]);
+      } catch (error) {
+        console.error("Initialization failed", error);
+      }
+    };
+
+    if (!isAuthenticatedAdmin && !isAuthenticatedUser) {
+      initApp();
+    }
+  }, []);
+
+  useEffect(() => {
+    const initCart = async () => {
+      try {
+        initCartItem();
+      } catch (error) {}
+    };
+
+    initCart();
+  }, [cartReSyncing]);
 
   const initAuth = async () => {
     try {
       dispatch(setAdminLoading(true));
-      console.log("before api call of auth");
       const adminData = await adminAuthService();
 
-      console.log("adminData ==>?", adminData);
       if (adminData?.user) {
         dispatch(setAdminSession(adminData.user));
         return;
@@ -65,15 +79,17 @@ const Index = ({ children }: { children: React.ReactNode }) => {
     try {
       const response = await getProductService({});
       if (response) {
-        dispatch(setProducts({
-          data: response.data,
-          meta: {
-            page: response.page,
-            limit: response.limit,
-            total: response.total,
-            totalPages: response.totalPages
-          }
-        }));
+        dispatch(
+          setProducts({
+            data: response.data,
+            meta: {
+              page: response.page,
+              limit: response.limit,
+              total: response.total,
+              totalPages: response.totalPages,
+            },
+          }),
+        );
       }
     } catch (err) {
       console.error(err);
@@ -90,11 +106,9 @@ const Index = ({ children }: { children: React.ReactNode }) => {
           dispatch(setCart(result.data));
         }
         if (result.cartId) {
-          dispatch(setCartId(result.cartId)); 
+          dispatch(setCartId(result.cartId));
         }
       }
-
-
     } catch (error) {
       console.error("Cart fetch failed", error);
     }

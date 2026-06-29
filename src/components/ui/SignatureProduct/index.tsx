@@ -1,38 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react"; 
-import {  ArrowRight } from "lucide-react";
-import { useNavigate } from "@/src/hooks/useNavigate";
-import {
-  getProductService, 
-} from "@/src/services/product/client";
+import React, { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import ProductCard from "@/src/components/ui/ProductCard";
-import { ProductItem } from "@/src/types/product"; 
+import { useSelector } from "react-redux";
 
-const Index = () => {
-  const [products, setProducts] = useState<ProductItem[]>([]); 
-  const [loading, setLoading] = useState(false);
-  const { goTo } = useNavigate(); 
- 
- 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await getProductService({});
-
-      if (response && response.data) {
-        setProducts(response.data); 
-      }
-    } catch (err) {
-      console.error("Error loading products:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+const Index = () => { 
+  const {items: products, loading} = useSelector((state) => state.product.items);
 
   // Updated operation execution block mapping directly back to the database
 
@@ -57,13 +31,7 @@ const Index = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {products.map((product) => {
-          return (
-            <ProductCard
-              key={product.id}
-              product={product} 
-              setProducts={setProducts} 
-            />
-          );
+          return <ProductCard key={product.id} product={product} />;
         })}
 
         <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[340px] text-center group cursor-pointer hover:border-rose-300 transition-colors duration-200">
