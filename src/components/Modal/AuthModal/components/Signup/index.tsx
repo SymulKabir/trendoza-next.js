@@ -3,6 +3,9 @@
 import React, { useState, ChangeEvent, FocusEvent, FormEvent } from "react";
 import { X, Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import { successToast } from "@/src/utils/toast";
+import { useDispatch } from "react-redux";
+import { setAdminSession, setUserSession } from "@/src/store/client/authSlice";
+import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
 
 interface AuthModalProps {
   setPageView: () => void;
@@ -40,6 +43,7 @@ export default function Index({ onClose, setPageView }: AuthModalProps) {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const dispatch = useDispatch();
 
   const validateField = (
     name: string,
@@ -176,6 +180,20 @@ export default function Index({ onClose, setPageView }: AuthModalProps) {
           isAdmin: false,
         });
         setTouched({});
+
+        if (data.token) {
+          if (url.includes("admin")) {
+            setAdminToken(data.token);
+          } else {
+            setUserToken(data.token);
+          }
+        }
+        if (data.user) {
+          dispatch(setUserSession(data.user));
+        }
+        if (data.admin) {
+          dispatch(setAdminSession(data.admin));
+        }
         onClose();
         successToast("Account created successfully!");
       } catch (error) {

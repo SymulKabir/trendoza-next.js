@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: "Authentication successful",
-        user: {
+        admin: {
           id: adminUser.id,
           name: adminUser.name,
           email: adminUser.email,

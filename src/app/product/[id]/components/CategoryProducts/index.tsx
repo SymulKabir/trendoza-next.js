@@ -3,7 +3,7 @@
 import React from "react";
 import { Plus, Bell, Zap } from "lucide-react";
 import { useSelector } from "react-redux";
-import { getProductUrl } from "@/src/utils";
+import { getProductUrl, shuffleList } from "@/src/utils";
 import ProductCard from "@/src/components/ui/ProductCard"
 
 interface Product {
@@ -19,8 +19,7 @@ interface Product {
 }
 
 export default function MasalaSection() {
-const products = useSelector(state => state?.product?.items)
-console.log("state ------------------>>>>", products)
+const products = useSelector(state => state?.product?.items) 
 
   //  {
   //     id: 1,
@@ -55,7 +54,7 @@ console.log("state ------------------>>>>", products)
 
         {/* PRODUCTS RESPONSIVE GRID GRID LAYOUT */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {!!products.length && products.map((product) => <ProductCard product={product}/>)}
+          {!!products.length && shuffleList(products).map((product) => <ProductCard product={product}/>)}
         </div>
 
         {/* BOTTOM SUBTEXT PROMPT SECTION */}

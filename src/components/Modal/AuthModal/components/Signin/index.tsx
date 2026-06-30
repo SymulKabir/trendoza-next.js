@@ -10,6 +10,8 @@ import React, {
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
 import { successToast } from "@/src/utils/toast";
+import { useDispatch } from "react-redux";
+import { setAdminSession, setUserSession } from "@/src/store/client/authSlice";
 
 interface SignInFormProps {
   onClose?: (user: any) => void;
@@ -27,10 +29,7 @@ interface FormErrors {
   password?: string;
 }
 
-export default function SignInForm({
-  onClose,
-  setPageView,
-}: SignInFormProps) {
+export default function SignInForm({ onClose, setPageView }: SignInFormProps) {
   const [formData, setFormData] = useState<FormState>({
     email: "",
     password: "",
@@ -42,6 +41,7 @@ export default function SignInForm({
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   const validateField = (name: string, value: string): string => {
     let error = "";
@@ -133,7 +133,7 @@ export default function SignInForm({
         }
 
         console.log("SUCCESSFULLY SIGNED IN:", data.user);
- 
+
         if (data.token) {
           if (url.includes("admin")) {
             setAdminToken(data.token);
@@ -141,8 +141,14 @@ export default function SignInForm({
             setUserToken(data.token);
           }
         }
-        successToast("Account login successfully!")
-        onClose()
+        if (data.user) {
+          dispatch(setUserSession(data.user));
+        }
+        if (data.admin) {
+          dispatch(setAdminSession(data.admin));
+        }
+        successToast("Account login successfully!");
+        onClose();
       } catch (error) {
         console.error("Network error running signin:", error);
         setSubmitError("Network error. Please check your internet connection.");

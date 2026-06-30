@@ -16,16 +16,16 @@ interface Category {
 }
 
 const categories: Category[] = [
-  { id: "1", name: "Bombay Special", image: "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=200&q=80" },
-  { id: "2", name: "Crabs & Lobsters", image: "https://images.unsplash.com/photo-1551248429-4043bcead3ab?w=200&q=80" },
-  { id: "3", name: "Dry Fish", image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&q=80" },
-  { id: "4", name: "Fishlo Masala", image: "https://images.unsplash.com/photo-1599250300435-b9693edd4843?w=200&q=80" },
-  { id: "5", name: "Fresh Cuts", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200&q=80" },
-  { id: "6", name: "Prawns & Shrimps", image: "https://images.unsplash.com/photo-1559742811-82428b49223b?w=200&q=80" },
-  { id: "7", name: "Ready To Cook", image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=200&q=80" },
-  { id: "8", name: "Ready To Eat", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=200&q=80" },
-  { id: "9", name: "Saltwater Fish", image: "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=200&q=80" },
-  { id: "10", name: "Squids & Lobsters", image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&q=80" },
+  { id: "1", name: "Bombay Special", image: "bombil.png" },
+  { id: "2", name: "Crabs & Lobsters", image: "crabs.png" },
+  { id: "3", name: "Dry Fish", image: "dryfish.png" },
+  { id: "4", name: "Fishlo Masala", image: "fishlo-masala.png" },
+  { id: "5", name: "Fresh Cuts", image: "fresh-cuts.webp" },
+  { id: "6", name: "Prawns & Shrimps", image: "prawns.png" },
+  { id: "7", name: "Ready To Cook", image: "ready-to-cook.webp" },
+  { id: "8", name: "Ready To Eat", image: "ready-to-eat.webp" },
+  { id: "9", name: "Saltwater Fish", image: "salt-water-fist.png" },
+  { id: "10", name: "Squids & Lobsters", image: "lobster.png" },
 ];
 
 export default function CategorySlider() {
@@ -45,7 +45,7 @@ export default function CategorySlider() {
       {/* Circular Image Wrapper */}
       <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-inner bg-slate-50 border border-slate-100 transition-transform duration-300 group-hover:scale-105">
         <Image
-          src={item.image}
+          src={`/assets/categories/${item.image}`}
           alt={item.name}
           fill
           sizes="(max-width: 640px) 96px, 112px"

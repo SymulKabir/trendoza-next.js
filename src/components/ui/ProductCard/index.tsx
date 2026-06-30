@@ -9,6 +9,7 @@ import { RootState } from "@/src/store/client/store";
 import { setCart, updateResyncing } from "@/src/store/client/cartSlice";
 import { useNavigate } from "@/src/hooks/useNavigate";
 import { updateSingleProduct } from "@/src/store/client/productSlice";
+import { usePathname } from "next/navigation";
 
 const Index = ({ product }: any) => {
   const activeVariant = product.variants?.[0];
@@ -19,12 +20,22 @@ const Index = ({ product }: any) => {
   const isOutOfStock = product.stockStatus !== "In Stock";
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
-  const { goTo } = useNavigate(); 
+  const { goTo } = useNavigate();
+  const { isAuthenticatedUser } = useSelector((state) => state.auth);
+
+
+
 
   const handleQuantityAdjustment = async (
     product: ProductItem,
     delta: number,
   ) => {
+    if (!isAuthenticatedUser) {
+      goTo(`?auth=sing-in`)
+      // goTo(`${pathname}?auth=sing-in`)
+      return
+    }
+
     const activeVariant = product.variants?.[0];
     if (!activeVariant) {
       alert(
@@ -37,7 +48,7 @@ const Index = ({ product }: any) => {
     const targetQty = Math.max(0, currentQty + delta);
     const updateProduct = { ...product, cartItemCount: targetQty || 0 };
     dispatch(updateSingleProduct(updateProduct));
-    
+
     try {
       await updateCartService({
         productId: product.id,

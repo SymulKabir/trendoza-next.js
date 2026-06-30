@@ -4,10 +4,11 @@ import AuthModal from "@/src/components/Modal/AuthModal";
 import CartDrawer from "@/src/components/Drawer/CartDrawer";
 import SearchResults from "@/src/components/ui/SearchResults";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store/client/store";
 import { useSearchParams } from "next/navigation";
+import { useNavigate } from "@/src/hooks/useNavigate";
 
 const Index = () => {
   const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
@@ -17,9 +18,11 @@ const Index = () => {
     (state: RootState) => state.auth,
   );
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const pathname = usePathname();
+  const { goTo } = useNavigate();
 
+  console.log("pathname --->>", pathname);
 
-  console.log("cartItems --->>", cartItems)
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -29,11 +32,14 @@ const Index = () => {
         handleAuthModal();
       }
     }
-  }, []);
+  }, [searchParams]);
 
   const router = useRouter();
 
   const handleAuthModal = () => {
+    if (isOpenAuthModal) {
+      goTo(pathname);
+    }
     setIsOpenAuthModal((pre) => !pre);
   };
   const handleCartDrawer = () => {
@@ -180,7 +186,9 @@ const Index = () => {
               <button
                 onClick={() =>
                   navigate(
-                    isAuthenticatedAdmin ? "/admin/products" : "/dashboard/order",
+                    isAuthenticatedAdmin
+                      ? "/admin/products"
+                      : "/dashboard/order",
                   )
                 }
                 className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors cursor-pointer"

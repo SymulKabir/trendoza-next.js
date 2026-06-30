@@ -8,10 +8,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 const banners = [
-  { id: 1, image: "slide-1.jpg" },
+  { id: 1, image: "slide-1.webp" },
   { id: 2, image: "slide-2.webp" },
   { id: 3, image: "slide-3.webp" },
-  { id: 4, image: "slide-4.webp" },
+  { id: 4, image: "slide-4.jpg" },
 ];
 
 export default function HeroBanner() {
