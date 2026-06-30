@@ -14,25 +14,31 @@ const Index = () => {
   const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
   const [isOpenCartDrawer, setIsOpenCartDrawer] = useState(false);
   const [isShowSearchResult, setIsShowSearchResult] = useState(false);
-  const { isAuthenticatedUser, isAuthenticatedAdmin } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const {
+    isUserLoading,
+    isAdminLoading,
+    isAuthenticatedUser,
+    isAuthenticatedAdmin,
+  } = useSelector((state: RootState) => state.auth);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const pathname = usePathname();
   const { goTo } = useNavigate();
 
-  console.log("pathname --->>", pathname);
+
+  // console.log('isUserLoading ---->>>', isUserLoading)
+  // console.log('isAdminLoading ---->>>', isAdminLoading)
+  // console.log("pathname --->>", pathname);
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!isAuthenticatedAdmin && !isAuthenticatedUser) {
+    if (!isUserLoading && !isAdminLoading && !isAuthenticatedAdmin && !isAuthenticatedUser) {
       const authQuery = searchParams.get("auth");
       if (authQuery && authQuery === "sing-in") {
         handleAuthModal();
       }
     }
-  }, [searchParams]);
+  }, [searchParams, isUserLoading, isAdminLoading]);
 
   const router = useRouter();
 

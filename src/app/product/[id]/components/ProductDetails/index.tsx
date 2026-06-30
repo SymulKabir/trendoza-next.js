@@ -9,6 +9,7 @@ import {
   Leaf,
   Lightbulb,
 } from "lucide-react";
+import ImagePreview from "@/src/app/product/[id]/components/ImagePreview"
 import { fetchProductByIdService } from "@/src/services/product/client";
 import { getProductUrl } from "@/src/utils";
 
@@ -45,12 +46,13 @@ const ProductDetails = ({ productId }: { productId: string }) => {
         {error || "Product not found"}
       </div>
     );
+ 
 
   return (
     <div className="w-full min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-4 space-y-4">
-          <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-stone-100 shadow-sm border border-stone-100">
+         {false && <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-stone-100 shadow-sm border border-stone-100">
             {/* Product Image */}
             {product.images ? (
               <img
@@ -70,7 +72,9 @@ const ProductDetails = ({ productId }: { productId: string }) => {
             <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors">
               &#10095;
             </button>
-          </div>
+          </div>}
+
+          <ImagePreview  product={product} />
         </div>
 
         {/* MIDDLE COLUMN: PRODUCT CONFIGURATOR */}

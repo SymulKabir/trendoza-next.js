@@ -13,8 +13,7 @@ export async function POST(request: Request) {
       where: { id: { in: ids } },
       include: { variants: true } // or whatever relation holds images
     });
-
-    // 2. Delete images (as you were doing)
+ 
     for (const product of productsToDelete) {
       if (product?.images?.length) {
         await Promise.all(product.images.map(async (imgInfo) => {
@@ -31,14 +30,7 @@ export async function POST(request: Request) {
     const result = await db.product.deleteMany({
       where: { id: { in: ids } },
     });
-    // console.log("result -->>>", result)
-    // await Promise.all(result.map(async (product) => {
-    //   if (product?.images?.length) {
-    //     await Promise.all(product.images.map(async (imgInfo) => {
-    //       await deleteProductImageService(imgInfo.name)
-    //     }))
-    //   }
-    // }))
+ 
     return NextResponse.json({ success: true, count: result.count });
   } catch (error) {
     console.error("Delete error:", error);
