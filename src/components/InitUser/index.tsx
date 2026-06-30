@@ -47,7 +47,7 @@ const Index = ({ children }: { children: React.ReactNode }) => {
     const initCart = async () => {
       try {
         initCartItem();
-      } catch (error) {}
+      } catch (error) { }
     };
 
     initCart();
@@ -77,12 +77,12 @@ const Index = ({ children }: { children: React.ReactNode }) => {
   const fetchProducts = async () => {
     dispatch(setLoadingProduct(true));
     try {
-      const response = await getProductService({});
+      const response = await getProductService({ limit: 50 });
       if (response) {
         dispatch(
           setProducts({
-            data: response.data,
-            meta: {
+            items: response.data,
+            pagination: {
               page: response.page,
               limit: response.limit,
               total: response.total,

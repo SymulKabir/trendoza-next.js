@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plus, Bell, Zap } from "lucide-react";
 import { useSelector } from "react-redux";
-import { getProductUrl, shuffleList } from "@/src/utils";
 import ProductCard from "@/src/components/ui/ProductCard"
 
 interface Product {
@@ -54,7 +52,7 @@ const products = useSelector(state => state?.product?.items)
 
         {/* PRODUCTS RESPONSIVE GRID GRID LAYOUT */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {!!products.length && shuffleList(products).map((product) => <ProductCard product={product}/>)}
+          {!!products.length && products.map((product:any) => <ProductCard product={product}/>)}
         </div>
 
         {/* BOTTOM SUBTEXT PROMPT SECTION */}

@@ -4,11 +4,12 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useMemo, useState } from "react"; 
-import { successToast, warningToast } from "@/src/utils/toast"; 
+import { useMemo, useState } from "react";
+import { successToast, warningToast } from "@/src/utils/toast";
 import { Lock, Loader2 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/src/store/client/cartSlice";
+import { setProducts } from "@/src/store/client/productSlice";
 interface ComponentProps {
   modalData: any;
   closeModal: () => void;
@@ -19,6 +20,9 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { items: products, pagination: productPagination } = useSelector((state) => state.product)
+
+  console.log("products =========------------->>>>>", products)
   const dispatch = useDispatch()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,9 +78,17 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
         successToast("Order placed successfully!");
         closeModal({ reloadData: true });
         dispatch(clearCart())
+        const updateProduct = products.map(({ _, ...product }) => {
+          return { ...product, cartItemCount: 0 }
+        })
+        console.log("updateProduct --->>>", updateProduct)
+        dispatch(setProducts({
+          items: updateProduct,
+          pagination: productPagination,
+        }),)
       } else {
         warningToast("Payment successful but order creation failed.");
-      } 
+      }
     }
     setIsProcessing(false);
   };

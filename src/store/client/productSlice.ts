@@ -29,14 +29,14 @@ const productSlice = createSlice({
     },
     setProducts: (
       state,
-      action: PayloadAction<{ data: ProductItem[]; meta: any }>,
+      action: PayloadAction<{ items: ProductItem[]; pagination: any }>,
     ) => {
-      state.items = action.payload.data;
+      state.items = action.payload.items;
       state.pagination = {
-        page: action.payload.meta.page,
-        limit: action.payload.meta.limit,
-        total: action.payload.meta.total,
-        totalPages: action.payload.meta.totalPages,
+        page: action.payload.pagination.page,
+        limit: action.payload.pagination.limit,
+        total: action.payload.pagination.total,
+        totalPages: action.payload.pagination.totalPages,
       };
     },
     updateSingleProduct: (state, action) => {

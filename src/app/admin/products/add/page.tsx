@@ -439,7 +439,7 @@ const Index = () => {
                   <input
                     type="file"
                     multiple
-                    accept="image/png, image/jpeg"
+                    accept="image/*"
                     onChange={handleImageUpload}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />

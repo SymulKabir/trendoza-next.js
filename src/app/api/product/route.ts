@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = await new URL(request.url);
     const headerList = await headers();
     const userId = headerList.get("x-user-id");
 
@@ -12,7 +12,6 @@ export async function GET(request: Request) {
     const page = Number(searchParams.get("page") || 1);
     const limit = Number(searchParams.get("limit") || 10);
     const skip = (page - 1) * limit;
-
     // sorting
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") === "asc" ? "asc" : "desc";
@@ -50,7 +49,7 @@ export async function GET(request: Request) {
     });
 
 
-    const data =products.length ? products.map((item) => {
+    const data = products.length ? products.map((item) => {
       const { cartItems, ...productWithoutCartItems } = item;
       return {
         ...productWithoutCartItems,

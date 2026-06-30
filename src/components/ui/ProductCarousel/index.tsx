@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { Bell } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import ProductCard from "@/src/components/ui/ProductCard"
@@ -10,7 +8,6 @@ import ProductCard from "@/src/components/ui/ProductCard"
 // Import Swiper styles
 import "swiper/css";
 import { useSelector } from "react-redux";
-import { shuffleList } from "@/src/utils";
 
 interface Product {
   id: string;
@@ -133,7 +130,7 @@ export default function ProductCarousel() {
         className="pb-4"
       >
         {!!products?.length &&
-          shuffleList(products).map((product) => (
+          products.map((product) => (
             <SwiperSlide key={product.id}>
               <ProductCard product={product}/>
             </SwiperSlide>
