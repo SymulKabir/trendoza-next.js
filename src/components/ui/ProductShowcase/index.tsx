@@ -34,15 +34,15 @@ export default function MasalaSection() {
       </div>
 
       {/* 2. ASYMMETRIC CONTENT SPLIT SECTION */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ">
         
         {/* LEFT COLUMN: ASYMMETRIC MASONRY IMAGE CONFIGURATION */}
-        <div className="lg:col-span-6 grid grid-cols-12 gap-4 items-end">
+        <div className="lg:col-span-6 grid grid-cols-12 gap-4 items-end relative bg-red">
           
           {/* Main Large Left Image - Smooth Top Right Asymmetric Corner Mask */}
-          <div className="col-span-7 relative h-[380px] sm:h-[450px] w-full rounded-bl-3xl rounded-tl-3xl rounded-br-3xl rounded-tr-[100px] overflow-hidden bg-slate-100 shadow-sm">
+          <div className="col-span-9 relative h-[380px] sm:h-[450px] w-full rounded-bl-3xl rounded-tl-3xl rounded-br-3xl rounded-tr-[100px] overflow-hidden bg-slate-100 shadow-sm">
             <Image
-              src="https://fishlo.in/masala_image/Fishlo_Premium_Fish_Curr_%20Masala%20_Medium_Spicy.png"
+              src="/assets/home/Fishlo_Premium_Fish_Curr_ Masala _Medium_Spicy.png"
               alt="Fish Fry Signature Pack"
               fill
               className="object-cover"
@@ -50,11 +50,11 @@ export default function MasalaSection() {
           </div>
 
           {/* Right Nested Stack Pair */}
-          <div className="col-span-5 flex flex-col gap-4">
+          <div className=" flex flex-col gap-4 w-[40%] absolute right-0 top-0">
             {/* Small Top Right Cutout item */}
             <div className="relative h-28 sm:h-36 w-full rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
               <Image
-                src="https://fishlo.in/masala_image/fish-fry.webp"
+                src="/assets/home/fish-fry.webp"
                 alt="Prepared Masala Dish cooked"
                 fill
                 className="object-cover"
@@ -64,7 +64,7 @@ export default function MasalaSection() {
             {/* Bottom Vertical Pack item */}
             <div className="relative h-[240px] sm:h-[290px] w-full rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
               <Image
-                src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&auto=format&fit=crop&q=80"
+                src="/assets/home/masala_one_bg.png"
                 alt="Fish Curry Premium Pack"
                 fill
                 className="object-cover"
