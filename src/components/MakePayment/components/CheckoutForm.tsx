@@ -96,9 +96,9 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
     () => ({
       fields: {
         billingDetails: {
-          name: "never" as const, // 🚫 Hides the Name Field
-          email: "never" as const, // 🚫 Hides the Email Field
-          phone: "never" as const, // 🚫 Hides the Phone Number Field
+          name: "never" as const, 
+          email: "never" as const,
+          phone: "never" as const, 
         },
       },
     }),
