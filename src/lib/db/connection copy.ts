@@ -1,28 +1,15 @@
 import "dotenv/config";
-
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/prisma/client/client";
-
 import { BD_CONFIG } from "@/src/constants";
 
 const adapter = new PrismaMariaDb({
   host: BD_CONFIG.host,
-  port: 3306,
-
   user: BD_CONFIG.user,
   password: BD_CONFIG.password,
   database: BD_CONFIG.database,
-
-  allowPublicKeyRetrieval: true,
-
-  connectionLimit: BD_CONFIG.connectionLimit || 10,
-  acquireTimeout: 10000,
-  connectTimeout: 5000,
-  idleTimeout: 1800,
+  connectionLimit: BD_CONFIG.connectionLimit,
 });
-
-const db = new PrismaClient({
-  adapter,
-});
+const db = new PrismaClient({ adapter }); 
 
 export { db };

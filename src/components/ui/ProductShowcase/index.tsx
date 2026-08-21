@@ -51,41 +51,42 @@ export default function MasalaSection() {
           </div>
 
           {/* Right Nested Stack Pair */}
-          <div className=" flex flex-col w-[40%] h-[70%] absolute right-0 bottom-0  ">
+          <div className=" flex flex-col items-end w-[40%] h-[70%] absolute right-0 bottom-0  ">
             {/* Small Top Right Cutout item */}
-            <div className="relative h-28 sm:h-36 w-full rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
+           <div className="relative h-[35%] w-[50%] overflow-hidden rounded-2xl bg-green-500 shadow-sm">
               <Image
                 src="/assets/home/fish-fry.webp"
                 alt="Prepared Masala Dish cooked"
                 fill
-                className="object-cover rounded-2xl"
+                className="rounded-2xl object-cover"
               />
             </div>
 
             {/* Bottom Vertical Pack item */}
             <div
               className="
-    relative
-    h-[240px] sm:h-[290px]
-    w-full
-    rounded-2xl
-    bg-white
-    p-[15px]
-    pb-0
-    pr-0
+                relative
+                h-[65%] 
+                w-full
+                rounded-2xl
+                rounded-bl-none
+                bg-white
+                p-[10px]
+                pb-0
+                pr-0
 
- relative
-  before:content-['']
-  before:absolute
-  before:w-[15px]
-  before:h-[15px]
-  before:top-[-15px]
-  before:left-[70px]
-  before:bg-[url('/assets/home/shape.png')]
-  before:bg-no-repeat
+              relative
+              before:content-['']
+              before:absolute
+              before:w-[15px]
+              before:h-[15px]
+              before:bottom-[0px]
+              before:left-[-15px]
+              before:bg-[url('/assets/home/shape.png')]
+              before:bg-no-repeat
 
- 
-  "
+            
+              "
             >
               <Image
                 src="/assets/home/masala_one_bg.png"
