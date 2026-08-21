@@ -6,7 +6,6 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { userId, cartId, items, subtotal, shippingCharge, discountAmount, totalAmount, paymentMethod, transactionId } = body;
         // Use a transaction to ensure all or nothing is saved
-       console.log("cartId -->", cartId)
         const result = await db.$transaction(async (tx) => {
             // 1. Create the Order
             const order = await tx.order.create({

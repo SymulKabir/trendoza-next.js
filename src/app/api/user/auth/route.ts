@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies, headers } from "next/headers";
-import { verifyToken } from "@/src/utils/authTokens/server"; // Adjust import to where your verifyToken function sits
+import {  headers } from "next/headers";
 import { db } from "@/src/lib/db/connection";
 
 export async function GET(request: Request) {
@@ -8,7 +7,6 @@ export async function GET(request: Request) {
     const headerList = await headers();
     const userId = headerList.get("x-user-id");
 
-    console.log("userId -=-", userId);
     if (!userId) {
       return NextResponse.json(
         { message: "unauthorized required" },

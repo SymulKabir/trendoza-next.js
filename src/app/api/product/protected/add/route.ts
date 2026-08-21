@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/src/lib/db/connection";
-import fs from "fs";
-import path from "path";
-import { PRODUCT_DIR } from "@/src/constants/url";
+import fs from "fs"; 
 import { modifyFilename } from "@/src/utils";
+import { productFilePath } from "@/src/utils/filePathProvider";
 
 export async function POST(request: Request) {
   try {
@@ -27,7 +26,6 @@ export async function POST(request: Request) {
 
     // 3. Extract uploaded images array
     const imageFiles = formData.getAll("images") as File[];
-    console.log("imageFiles -->>", imageFiles);
 
     // Validate absolute essentials
     if (!name || !category || variants.length === 0) {
@@ -58,10 +56,10 @@ export async function POST(request: Request) {
         name,
         category,
         description,
-        stockStatus, 
-        badgeType,  
-        images: imageUrls,  
-        availableCuts, 
+        stockStatus,
+        badgeType,
+        images: imageUrls,
+        availableCuts,
         // Setup database relations for multiple weight tier sizes
         variants: {
           create: variants.map((v: any) => ({
@@ -77,7 +75,6 @@ export async function POST(request: Request) {
         variants: true, // Includes variations data in the return response object
       },
     });
-    console.log("newProduct -->>>", newProduct);
     if (!newProduct) {
       return NextResponse.json(
         {
@@ -89,21 +86,19 @@ export async function POST(request: Request) {
     if (updateImages?.length) {
       await Promise.all(
         updateImages.map(async (item) => {
-          console.log("item ->", item);
           const file = item.file;
           if (!file) return;
 
-          const itemLocation = path.join(PRODUCT_DIR, item.alias);
-          if (!fs.existsSync(PRODUCT_DIR)) {
-            await fs.mkdirSync(PRODUCT_DIR, { recursive: true });
-          }
-          if (fs.existsSync(itemLocation)) {
+          const itemLocation = productFilePath(item.alias)
+
+          if (itemLocation && fs.existsSync(itemLocation)) {
             return;
           }
           const bytes = await file.arrayBuffer();
           const buffer = Buffer.from(bytes);
-
-          await fs.promises.writeFile(itemLocation, buffer);
+          if (itemLocation) {
+            await fs.promises.writeFile(itemLocation, buffer);
+          }
         }),
       );
     }

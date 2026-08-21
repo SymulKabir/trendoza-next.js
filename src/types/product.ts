@@ -15,10 +15,14 @@ export interface ProductVariant {
 export interface ProductItem {
   id: string;
   name: string;
+  price: number;
+  stock: number;
   category: string;
   description: string | null;
   stockStatus: string;
   badgeType: string;
+  status: string;
+  cartItemCount?: number;
   images: ProductImage[];
   availableCuts: string[];
   createdAt: string;

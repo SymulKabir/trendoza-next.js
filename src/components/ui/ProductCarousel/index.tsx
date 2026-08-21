@@ -4,6 +4,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import ProductCard from "@/src/components/ui/ProductCard"
+import type { RootState } from "@/src/store/client/store";
 
 // Import Swiper styles
 import "swiper/css";
@@ -21,82 +22,9 @@ interface Product {
   isOutOfStock: boolean;
   deliveryTime?: string;
 }
-
-// {
-//   id: "1",
-//   name: "Premium White Pomfret (Paplet) – Sea Fresh - Medium",
-//   image: "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=500&auto=format&fit=crop&q=60", // Placeholder
-//   price: 700,
-//   originalPrice: 800,
-//   discount: 12,
-//   weight: "500g",
-//   isOutOfStock: true,
-// },
-
-const products2: Product[] = [
-  {
-    id: "1",
-    name: "Premium White Pomfret (Paplet) – Sea Fresh - Medium",
-    image:
-      "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=500&auto=format&fit=crop&q=60", // Placeholder
-    price: 700,
-    originalPrice: 800,
-    discount: 12,
-    weight: "500g",
-    isOutOfStock: true,
-  },
-  {
-    id: "2",
-    name: "Fresh Indian Salmon (Rawas / Raavas / Vazhmeen)",
-    image:
-      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&auto=format&fit=crop&q=60", // Placeholder
-    price: 550,
-    originalPrice: 850,
-    discount: 35,
-    weight: "500g",
-    isOutOfStock: true,
-  },
-  {
-    id: "3",
-    name: "Fresh Bangda (Mackerel) – Cleaned, Never Frozen - Large",
-    image:
-      "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=500&auto=format&fit=crop&q=60", // Placeholder
-    price: 175,
-    originalPrice: 250,
-    discount: 30,
-    weight: "500g",
-    isOutOfStock: false,
-    deliveryTime: "Today 10AM - 11AM",
-  },
-  {
-    id: "4",
-    name: "Fresh Black Pomfret (Premium Quality) - Halwa",
-    image:
-      "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=500&auto=format&fit=crop&q=60", // Placeholder
-    price: 550,
-    originalPrice: 675,
-    discount: 19,
-    weight: "500g",
-    isOutOfStock: false,
-    deliveryTime: "Today 10AM - 11AM",
-  },
-  {
-    id: "5",
-    name: "Fresh Squid / Calamari / Koonthal / Premium Bondas",
-    image:
-      "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&auto=format&fit=crop&q=60", // Placeholder
-    price: 300,
-    originalPrice: 425,
-    discount: 29,
-    weight: "500g",
-    isOutOfStock: false,
-    deliveryTime: "Today 10AM - 11AM",
-  },
-];
-
+ 
 export default function ProductCarousel() {
-  const { items: products } = useSelector((state) => state.product);
-  console.log("products ------>>>>>>>>>", products);
+  const { items: products } = useSelector((state: RootState) => state.product);
 
   return (
     <section className="py-12 bg-white w-full max-w-7xl mx-auto px-4 select-none">
@@ -113,7 +41,7 @@ export default function ProductCarousel() {
       {/* Swiper Slider */}
       <Swiper
         modules={[Autoplay]}
-        spacing={16}
+        // spacing={16}
         slidesPerView={1}
         loop={true}
         autoplay={{

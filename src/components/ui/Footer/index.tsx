@@ -9,7 +9,7 @@ export default function Footer() {
 
   return (
     <footer className="relative w-full bg-[#f4f7f9] text-slate-700 select-none pt-20">
-      
+
       {/* SVG Smooth Wave Border Top */}
       <div className="absolute top-0 left-0 w-full overflow-hidden line-height-0 transform rotate-180 bg-white">
         <svg
@@ -23,7 +23,7 @@ export default function Footer() {
 
       {/* Main Grid Content Area */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
-        
+
         {/* Brand Information Column */}
         <div className="lg:col-span-4 space-y-4">
           {/* Logo Brand Frame */}
@@ -35,13 +35,13 @@ export default function Footer() {
               fish<span className="text-rose-500">lo.</span>
             </span>
           </div>
-          
+
           {/* Brand Mission Description Paragraph */}
           <p className="text-xs sm:text-[13px] text-slate-500 leading-relaxed max-w-sm">
-            Fishlo is not just an online seafood store. It&apos;s a modern, hygienic seafood 
-            platform designed to bring clean, carefully handled fish straight to your doorstep. 
-            We source fresh seafood, clean it in controlled environments, and pack it with 
-            precision — without chemicals or preservatives. Our promise is simple: premium 
+            Fishlo is not just an online seafood store. It&apos;s a modern, hygienic seafood
+            platform designed to bring clean, carefully handled fish straight to your doorstep.
+            We source fresh seafood, clean it in controlled environments, and pack it with
+            precision — without chemicals or preservatives. Our promise is simple: premium
             freshness, transparent pricing, and reliable delivery.
           </p>
         </div>
@@ -128,29 +128,36 @@ export default function Footer() {
           <span>
             Copyright © {currentYear} Fishlo Technologies. All rights reserved.
           </span>
-          
+
           {/* Social Platform Meta Icon Row - Swapped out for clean inline SVGs */}
           <div className="flex items-center gap-4">
             {/* Instagram SVG */}
-            <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-white transition-opacity duration-150 opacity-90 hover:opacity-100"
               aria-label="Instagram"
             >
               <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" w="20" h="20" rx="5" ry="5"></rect>
+                <rect
+                  x="2"
+                  y="2"
+                  width="20"
+                  height="20"
+                  rx="5"
+                  ry="5"
+                />
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
-            
+
             {/* YouTube SVG */}
-            <a 
-              href="https://youtube.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-white transition-opacity duration-150 opacity-90 hover:opacity-100"
               aria-label="YouTube"
             >

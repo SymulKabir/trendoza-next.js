@@ -54,14 +54,12 @@ export const userAuthMiddleware = async ({
       throw Error("Token not fund");
     }
 
-    console.log("token ======>>>>", token);
     const res = await fetch(`${BACKEND_URL}/api/auth/check-token`, {
       method: "GET",
       headers: { authorization: `Bearer ${token}` },
     });
 
     const data = await res.json();
-    console.log("data  for middle ware--->>", data);
 
     if (data?.user) {
       const requestHeaders = new Headers(request.headers);

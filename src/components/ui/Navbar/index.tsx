@@ -25,9 +25,6 @@ const Index = () => {
   const { goTo } = useNavigate();
 
 
-  // console.log('isUserLoading ---->>>', isUserLoading)
-  // console.log('isAdminLoading ---->>>', isAdminLoading)
-  // console.log("pathname --->>", pathname);
 
   const searchParams = useSearchParams();
 

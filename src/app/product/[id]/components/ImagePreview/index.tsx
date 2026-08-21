@@ -36,7 +36,7 @@ const Index = ({ product }: { product: any }) => {
           {product.images.map((img: any, idx: number) => (
             <SwiperSlide key={idx}>
               <img
-                src={getProductUrl([img])}
+                src={getProductUrl([img]) ?? ""}
                 alt={product.name || "Product image"}
                 className="w-full h-full object-cover"
               />
@@ -60,7 +60,7 @@ const Index = ({ product }: { product: any }) => {
             <SwiperSlide key={idx} className="cursor-pointer">
               <div className="aspect-square rounded-lg overflow-hidden border-2 border-transparent transition-all">
                 <img
-                  src={getProductUrl([img])}
+                  src={getProductUrl([img]) ?? ""}
                   className="w-full h-full object-cover"
                 />
               </div>

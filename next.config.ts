@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import '@/src/utils/check-env'
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [

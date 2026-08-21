@@ -1,9 +1,13 @@
 import { db } from "@/src/lib/db/connection";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } },
+  request: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ id: string }>;
+  }
 ) {
   try {
     const paramsObj = await params;
@@ -19,7 +23,7 @@ export async function GET(
     }
 
     return NextResponse.json(product); 
-  } catch (error) { 
+  } catch (error:any) { 
     return NextResponse.json(
       { error: "Failed to fetch product" },
       { status: 500 },

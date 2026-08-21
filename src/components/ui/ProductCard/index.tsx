@@ -5,11 +5,12 @@ import Image from "next/image";
 import { ProductItem } from "@/src/types/product";
 import { updateCartService } from "@/src/services/product/client";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/src/store/client/store";
+// import { RootState } from "@/src/store/client/store";
 import { setCart, updateResyncing } from "@/src/store/client/cartSlice";
 import { useNavigate } from "@/src/hooks/useNavigate";
 import { updateSingleProduct } from "@/src/store/client/productSlice";
-import { usePathname } from "next/navigation";
+import type { RootState } from "@/src/store/client/store";
+
 
 const Index = ({ product }: any) => {
   const activeVariant = product.variants?.[0];
@@ -21,7 +22,7 @@ const Index = ({ product }: any) => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
   const { goTo } = useNavigate();
-  const { isAuthenticatedUser } = useSelector((state) => state.auth);
+  const { isAuthenticatedUser } = useSelector((state: RootState) => state.auth);
 
 
 
@@ -44,7 +45,7 @@ const Index = ({ product }: any) => {
       return;
     }
 
-    const currentQty = product.cartItemCount;
+    const currentQty = product.cartItemCount || 0;
     const targetQty = Math.max(0, currentQty + delta);
     const updateProduct = { ...product, cartItemCount: targetQty || 0 };
     dispatch(updateSingleProduct(updateProduct));
@@ -74,13 +75,12 @@ const Index = ({ product }: any) => {
           return cartItem.productId !== product.id;
         });
       }
-      console.log("newCartItem -->>>", newCartItem);
       if (newCartItem) {
         dispatch(updateResyncing());
       } else {
         dispatch(setCart(updateCartItems));
       }
-    } catch (error) {}
+    } catch (error:any) { }
   };
 
   return (
@@ -90,7 +90,7 @@ const Index = ({ product }: any) => {
     >
       <div className="relative w-full h-40 rounded-xl overflow-hidden bg-slate-50 group">
         <Image
-          src={getProductUrl(product.images)}
+          src={getProductUrl(product.images) ?? ""}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, 220px"

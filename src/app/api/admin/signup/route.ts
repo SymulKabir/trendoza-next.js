@@ -47,7 +47,6 @@ export async function POST(request: Request) {
         password: hashedPassword,
       },
     });
-    console.log("newAdmin -->>", newAdmin);
     // 6. Return safe user data (exclude the hashed password from the response)
     return NextResponse.json(
       {

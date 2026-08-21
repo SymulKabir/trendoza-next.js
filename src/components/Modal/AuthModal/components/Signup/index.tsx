@@ -7,8 +7,10 @@ import { useDispatch } from "react-redux";
 import { setAdminSession, setUserSession } from "@/src/store/client/authSlice";
 import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
 
+type AuthPage = "sign-in" | "sign-up";
+
 interface AuthModalProps {
-  setPageView: () => void;
+  setPageView: (page: AuthPage) => void;
   onClose: () => void;
 }
 
@@ -168,7 +170,6 @@ export default function Index({ onClose, setPageView }: AuthModalProps) {
           return;
         }
 
-        console.log("SUCCESSFULLY REGISTERED:", data.user);
 
         // Reset form states and close modal
         setFormData({
@@ -396,7 +397,9 @@ export default function Index({ onClose, setPageView }: AuthModalProps) {
           <button
             type="button"
             onClick={() => {
-              setPageView("sign-in");
+              if (setPageView) {
+                setPageView("sign-in");
+              }
             }}
             className="text-rose-500 font-bold hover:underline"
           >

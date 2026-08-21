@@ -13,10 +13,13 @@ export async function POST(request: Request) {
       where: { id: { in: ids } },
       include: { variants: true } // or whatever relation holds images
     });
- 
+
     for (const product of productsToDelete) {
-      if (product?.images?.length) {
-        await Promise.all(product.images.map(async (imgInfo) => {
+      const images = product.images;
+
+      if (Array.isArray(images)) {
+
+        await Promise.all(images.map(async (imgInfo: any) => {
           await deleteProductImageService(imgInfo.name)
         }))
       }
@@ -30,7 +33,7 @@ export async function POST(request: Request) {
     const result = await db.product.deleteMany({
       where: { id: { in: ids } },
     });
- 
+
     return NextResponse.json({ success: true, count: result.count });
   } catch (error) {
     console.error("Delete error:", error);

@@ -19,7 +19,7 @@ interface CartItem {
   quantity: number;
   productName: string;
   category: string;
-  unitPrice: number;
+  unitPrice?: number;
   weight: string;
   totalPrice: number;
   images?: {
@@ -35,12 +35,11 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [makePaymentModalData, setMakePaymentModalData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading] = useState<boolean>(false);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartId = useSelector((state: RootState) => state.cart.cartId);
 
 
-  console.log("cartId --->>", cartId)
   const { user } = useSelector(
     (state: RootState) => state.auth,
   );
@@ -183,7 +182,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       {/* Thumbnail Container Element */}
                       <div className="relative w-16 h-12 bg-stone-100 border border-stone-200/60 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                         <Image
-                          src={getProductUrl(item.images)}
+                          src={getProductUrl(item.images) ?? ""}
                           alt={item.productName}
                           fill
                           sizes="64px"

@@ -22,8 +22,7 @@ import { successToast, warningToast } from "@/src/utils/toast";
 
 export default function ProductDashboard() {
   const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   // 🔥 API STATE (replaces static products)
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [page, setPage] = useState(1);
@@ -51,7 +50,6 @@ export default function ProductDashboard() {
     fetchProducts(1);
   }, []);
 
-  console.log("products ========<<<<>>>>>>>", products);
 
   // ================= SELECT LOGIC =================
   const handleSelectAll = () => {
@@ -63,7 +61,7 @@ export default function ProductDashboard() {
     setSelectedAll(!selectedAll);
   };
 
-  const toggleSelectItem = (id: number) => {
+  const toggleSelectItem = (id: string) => {
     if (selectedItems.includes(id)) {
       setSelectedItems((prev) => prev.filter((item) => item !== id));
       setSelectedAll(false);
@@ -84,8 +82,7 @@ export default function ProductDashboard() {
   };
   const deleteProducts = async (ids: string[]) => {
     try {
-      const { success, message, count } = await deleteProductService(ids);
-      console.log("success, message, count -->", { success, message, count });
+      const { success } = await deleteProductService(ids);
       if (success) {
         successToast("Product deleted successfully.");
         const updateProduct = products.filter(
@@ -95,7 +92,7 @@ export default function ProductDashboard() {
       } else {
         warningToast("Failed to delete product");
       }
-    } catch (error) {}
+    } catch (error:any) { }
   };
 
   return (
@@ -197,7 +194,10 @@ export default function ProductDashboard() {
                           <div className="w-8 h-8 rounded-lg overflow-hidden bg-amber-100/60 border border-amber-200/40 flex items-center justify-center text-sm">
                             <img
                               className="w-full h-full"
-                              src={getProductUrl(product.images)}
+                              src={
+                                getProductUrl(product.images) ??
+                                "/images/product-placeholder.png"
+                              }
                               alt=""
                             />
                           </div>
@@ -283,11 +283,10 @@ export default function ProductDashboard() {
             <button
               key={i}
               onClick={() => fetchProducts(i + 1)}
-              className={`w-7 h-7 rounded-md text-xs font-bold ${
-                page === i + 1
+              className={`w-7 h-7 rounded-md text-xs font-bold ${page === i + 1
                   ? "bg-indigo-50 text-indigo-600 border border-indigo-100/40"
                   : "text-slate-500 hover:bg-slate-100"
-              }`}
+                }`}
             >
               {i + 1}
             </button>

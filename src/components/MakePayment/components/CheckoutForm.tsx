@@ -10,6 +10,7 @@ import { Lock, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/src/store/client/cartSlice";
 import { setProducts } from "@/src/store/client/productSlice";
+import type { RootState } from "@/src/store/client/store";
 interface ComponentProps {
   modalData: any;
   closeModal: () => void;
@@ -20,9 +21,8 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { items: products, pagination: productPagination } = useSelector((state) => state.product)
+  const { items: products, pagination: productPagination } = useSelector((state: RootState) => state.product)
 
-  console.log("products =========------------->>>>>", products)
   const dispatch = useDispatch()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,14 +47,10 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
         },
       },
     });
-    console.log("paymentIntent -->>", paymentIntent)
-    console.log("error from payment ====>>>>", error)
     if (error) {
       setErrorMessage(error.message || "An unexpected error occurred.");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       const transactionId = paymentIntent.id;
-      console.log("Payment success --->>")
-      console.log("transactionId --->>", transactionId)
 
       // Make the API call
       const res = await fetch("/api/order/make-payment", {
@@ -76,12 +72,11 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
       const data = await res.json();
       if (data.success) {
         successToast("Order placed successfully!");
-        closeModal({ reloadData: true });
+        closeModal();
         dispatch(clearCart())
-        const updateProduct = products.map(({ _, ...product }) => {
+        const updateProduct = products.map(({ id, ...product }:any) => {
           return { ...product, cartItemCount: 0 }
         })
-        console.log("updateProduct --->>>", updateProduct)
         dispatch(setProducts({
           items: updateProduct,
           pagination: productPagination,
@@ -96,9 +91,9 @@ const Index = ({ modalData, closeModal }: ComponentProps) => {
     () => ({
       fields: {
         billingDetails: {
-          name: "never" as const, 
+          name: "never" as const,
           email: "never" as const,
-          phone: "never" as const, 
+          phone: "never" as const,
         },
       },
     }),

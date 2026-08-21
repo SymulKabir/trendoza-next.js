@@ -1,9 +1,6 @@
-import { PRODUCT_DIR } from "@/src/constants/url";
-import { adminHeader, userHeader } from "@/src/utils/headers";
 
-export const addProductService = async (payload) => {
+export const addProductService = async (payload: any) => {
   try {
-    console.log("hello from server");
     const formData = new FormData();
 
     formData.append("name", payload.name);
@@ -15,8 +12,7 @@ export const addProductService = async (payload) => {
     formData.append("availableCuts", JSON.stringify(payload.availableCuts));
     formData.append("variants", JSON.stringify(payload.variants));
 
-    console.log("payload -->>", payload);
-    payload?.rawImageFiles?.forEach((img) => {
+    payload?.rawImageFiles?.forEach((img: any) => {
       formData.append("images", img);
     });
     const response = await fetch("/api/product/protected/add", {
@@ -28,7 +24,6 @@ export const addProductService = async (payload) => {
 
     return result;
   } catch (error) {
-    console.log("error -->", error);
     return error;
   }
 };
@@ -64,7 +59,6 @@ export const deleteProductService = async (ids: string[]) => {
     }
 
     const data = await res.json();
-    console.log("data --->", data)
     return data;
   } catch (err) {
     console.error(err);

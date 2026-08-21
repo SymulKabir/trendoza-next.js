@@ -1,5 +1,4 @@
-import path from "path";
-import { ProductImage } from "../types/product";
+import path from "path"; 
 
 export const generateUniqueString = (): string => {
   const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -28,9 +27,7 @@ export const modifyFilename = (
 
  
 
-export const getProductUrl = (
-  info: ProductImage | ProductImage[] | null | undefined,
-) => {
+export const getProductUrl = (info: any): string | null => {
   const baseUrl = "/api/media/product"; 
 
   if (!info) return null;

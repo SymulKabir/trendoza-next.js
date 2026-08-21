@@ -137,7 +137,6 @@ const Index = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Hello form api call");
     setProgressing(true);
 
     try {
@@ -152,7 +151,6 @@ const Index = () => {
         rawImageFiles: images.map((img) => img.file),
       };
       const { data } = await addProductService(productPayload);
-      console.log("data --->>>", data);
       if (data) {
         successToast("Product created successfully!");
         goTo("/admin/products");
@@ -163,7 +161,6 @@ const Index = () => {
       setProgressing(false);
     }
   };
-  console.log("images --->>", images);
 
   return (
     <div className="min-h-screen bg-[#F8F9FC] p-6 sm:p-8 font-sans antialiased text-slate-600">

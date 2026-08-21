@@ -5,11 +5,17 @@ import { APP_ROOT_DIRECTORY } from "@/src/constants/url";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { folder: string; filename: string } },
+  {
+    params,
+  }: {
+    params: Promise<{
+      folder: string;
+      filename: string;
+    }>;
+  }
 ) {
   try {
     const { folder, filename } = await params;
-    console.log("params ->", folder, filename)
 
     const filePath = path.join(APP_ROOT_DIRECTORY, folder, filename);
 

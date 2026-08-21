@@ -32,8 +32,6 @@ export const headerModifyMiddleware = async ({
       });
       if (res.ok) {
         const data = await res.json();
-        console.log("data --from api--------->>>", data)
-
         if (data?.user) {
           requestHeaders.set("x-user-id", data.user.id);
         }

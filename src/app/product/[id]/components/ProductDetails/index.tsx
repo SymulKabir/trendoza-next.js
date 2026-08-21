@@ -45,13 +45,13 @@ const ProductDetails = ({ productId }: { productId: string }) => {
         {error || "Product not found"}
       </div>
     );
- 
+
 
   return (
     <div className="w-full min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-4 space-y-4">
-          <ImagePreview  product={product} />
+          <ImagePreview product={product} />
         </div>
 
         {/* MIDDLE COLUMN: PRODUCT CONFIGURATOR */}
@@ -84,16 +84,14 @@ const ProductDetails = ({ productId }: { productId: string }) => {
             {/* Option: 500g */}
             {!!product?.variants?.length &&
               product.variants.map((variant: any, index: number) => {
-                console.log("variant --->>>", variant);
                 return (
                   <div
                     key={index}
                     onClick={() => setSelectedWeight(variant.weight)}
-                    className={`relative flex items-center justify-between p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
-                      selectedWeight === variant.weight
+                    className={`relative flex items-center justify-between p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedWeight === variant.weight
                         ? "border-[#10b981] bg-[#f0fdf4]/40"
                         : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className="relative flex items-center justify-center">
@@ -135,15 +133,14 @@ const ProductDetails = ({ productId }: { productId: string }) => {
           {!!product?.availableCuts?.length && (
             <div className="space-y-2">
               <div className="grid grid-cols-3 gap-3">
-                {product.availableCuts?.map((cut) => (
+                {product.availableCuts?.map((cut: any) => (
                   <div
                     key={cut}
                     onClick={() => setSelectedCut(cut as any)}
-                    className={`cursor-pointer rounded-lg p-1 text-center transition-all ${
-                      selectedCut === cut
+                    className={`cursor-pointer rounded-lg p-1 text-center transition-all ${selectedCut === cut
                         ? "ring-2 ring-slate-800 ring-offset-1"
                         : "opacity-80 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <div className="aspect-video w-full bg-stone-100 rounded-md mb-1.5 flex items-center justify-center text-[10px] text-stone-400 font-medium border border-stone-200/60">
                       {cut} Box

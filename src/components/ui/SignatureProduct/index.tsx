@@ -5,9 +5,10 @@ import { ArrowRight } from "lucide-react";
 import ProductCard from "@/src/components/ui/ProductCard";
 import { useSelector } from "react-redux";
 import {useNavigate} from "@/src/hooks/useNavigate"
+import type { RootState } from "@/src/store/client/store";
 
 const Index = () => { 
-  const {items: products, loading} = useSelector((state) => state.product);
+  const {items: products, loading} = useSelector((state: RootState) => state.product);
 const {goTo} = useNavigate()
   // Updated operation execution block mapping directly back to the database
 

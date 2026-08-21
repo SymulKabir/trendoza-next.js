@@ -5,7 +5,6 @@ import React, {
   ChangeEvent,
   FocusEvent,
   FormEvent,
-  useEffect,
 } from "react";
 import { Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import { setAdminToken, setUserToken } from "@/src/utils/authTokens/client";
@@ -14,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { setAdminSession, setUserSession } from "@/src/store/client/authSlice";
 
 interface SignInFormProps {
-  onClose?: (user: any) => void;
+  onClose?: () => void;
   setPageView?: (user: any) => void;
 }
 
@@ -132,7 +131,6 @@ export default function SignInForm({ onClose, setPageView }: SignInFormProps) {
           return;
         }
 
-        console.log("SUCCESSFULLY SIGNED IN:", data.user);
 
         if (data.token) {
           if (url.includes("admin")) {
@@ -148,7 +146,9 @@ export default function SignInForm({ onClose, setPageView }: SignInFormProps) {
           dispatch(setAdminSession(data.admin));
         }
         successToast("Account login successfully!");
-        onClose();
+        if (onClose) {
+          onClose();
+        }
       } catch (error) {
         console.error("Network error running signin:", error);
         setSubmitError("Network error. Please check your internet connection.");
@@ -289,7 +289,9 @@ export default function SignInForm({ onClose, setPageView }: SignInFormProps) {
           <button
             type="button"
             onClick={() => {
-              setPageView("sign-up");
+              if (setPageView) {
+                setPageView("sign-up");
+              }
             }}
             className="text-rose-500 font-bold hover:underline"
           >

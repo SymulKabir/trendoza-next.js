@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
+import type { RootState } from "@/src/store/client/store";
 import ProductCard from "@/src/components/ui/ProductCard"
 
 interface Product {
@@ -17,23 +18,14 @@ interface Product {
 }
 
 export default function MasalaSection() {
-const products = useSelector(state => state?.product?.items) 
-
-  //  {
-  //     id: 1,
-  //     title: "Fishlo Signature Fish Fry Masala - Spicy - 100g",
-  //     description: "Fishlo's signature homemade spicy fry masala, specially...",
-  //     price: 65,
-  //     originalPrice: 129,
-  //     discount: "50% off",
-  //     isOutOfStock: false,
-  //     deliveryTime: "Today 12PM - 1PM",
-  //   },
+  const products = useSelector(
+    (state: RootState) => state.product.items
+  );
 
   return (
     <div className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased">
       <div className="max-w-7xl mx-auto space-y-10">
-        
+
         {/* SECTION HEADER CONTAINER WITH CUSTOM RIBBON BADGE */}
         <div className="relative pt-6">
           {/* Custom Red Ribbon Badge Shape */}
@@ -52,7 +44,7 @@ const products = useSelector(state => state?.product?.items)
 
         {/* PRODUCTS RESPONSIVE GRID GRID LAYOUT */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {!!products.length && products.map((product:any) => <ProductCard product={product}/>)}
+          {!!products.length && products.map((product: any) => <ProductCard product={product} />)}
         </div>
 
         {/* BOTTOM SUBTEXT PROMPT SECTION */}

@@ -166,8 +166,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           return;
         }
 
-        console.log("SUCCESSFULLY REGISTERED:", data.user);
-
         // Reset form states and close modal
         setFormData({
           name: "",
