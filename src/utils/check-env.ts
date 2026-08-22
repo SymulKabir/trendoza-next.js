@@ -130,11 +130,11 @@ console.log("✅ Environment configuration validated");
 console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
 console.log(`📦 Environment : ${process.env.NODE_ENV || "development"}`);
-console.log(`🌐 Host        : ${process.env.HOST}`);
+console.log(`🌐 Host        : ${process.env.DB_PORT}`);
 console.log(`🚪 Port        : ${port}`);
 console.log(`💾 Storage     : ${storagePath}`);
 console.log(`💳 Stripe      : configured`);
 console.log(`🔐 JWT         : configured`);
-console.log(`🗄️ Database    : ${process.env.DATABASE}`);
+console.log(`🗄️ Database    : ${process.env.DB_NAME}`);
 
 console.log("\n🚀 Starting Next.js...\n");
