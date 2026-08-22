@@ -63,7 +63,7 @@ console.log(`✓ ${requiredEnv.length} environment variables validated`);
 // 3. Validate PORT
 // ─────────────────────────────────────────────
 
-const port = Number(process.env.PORT);
+const port = Number(process.env.PORT || 3000);
 
 if (
   !Number.isInteger(port) ||

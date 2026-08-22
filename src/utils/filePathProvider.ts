@@ -3,7 +3,7 @@ import path from 'path';
 
 const confirmDir = (path: string) => {
     if (!path) return null
-    if (!fs.existsSync(path)) fs.mkdirSync(path)
+    if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
 }
 export const appRootDir = () => {
     return process.cwd();

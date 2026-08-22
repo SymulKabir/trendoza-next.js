@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       await Promise.all(
         updateImages.map(async (item) => {
           const file = item.file;
-          if (!file) return;
+          if (!item.alias || !file) return;
 
           const itemLocation = productFilePath(item.alias)
 
