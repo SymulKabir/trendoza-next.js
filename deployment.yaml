@@ -61,7 +61,7 @@ spec:
               value: "3000"
 
             - name: HOSTNAME
-              value: "0.0.0.0"
+              value: "mysql-service"
 
             - name: STORAGE_DIR
               value: "../storage/fishlo"
