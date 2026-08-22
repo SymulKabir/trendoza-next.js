@@ -26,13 +26,11 @@ export const productDir = () => {
     confirmDir(dir)
     return dir
 };
-export const productFilePath = (name?: string | null) => {
-  if (!name) return null;
+export const productFilePath = (name: string) => { 
 
   return path.join(productDir(), name);
 };
 
 
 
-
-appRootDir()
+ 

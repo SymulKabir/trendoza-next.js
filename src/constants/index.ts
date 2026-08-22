@@ -1,9 +1,9 @@
 export const BD_CONFIG = {
-  host: process.env.HOST || "127.0.0.1",
-  user: process.env.USER || "trendoza_user",
-  password: process.env.PASSWORD || "12345",
-  database: process.env.DATABASE || "trendoza",
-  port: process.env.PORT || 3306,
+  host: process.env.DB_HOST || "127.0.0.1",
+  user: process.env.DB_USER || "trendoza_user",
+  password: process.env.DB_PASSWORD || "12345",
+  database: process.env.DB_NAME || "trendoza",
+  port: process.env.DB_PORT || 3306,
   connectionLimit: 5,
 };
 export const DATABASE_URL=`mysql://${BD_CONFIG.user}:${BD_CONFIG.password}@${BD_CONFIG.host}:${BD_CONFIG.port}/${BD_CONFIG.database}`

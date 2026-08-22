@@ -30,11 +30,11 @@ const requiredEnv = [
   "JWT_SECRET",
   "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
   "STRIPE_SECRET_KEY",
-  "HOST",
-  "USER",
-  "PASSWORD",
-  "DATABASE",
-  "PORT",
+  "DB_HOST",
+  "DB_USER",
+  "DB_PASSWORD",
+  "DB_NAME",
+  "DB_PORT",
 ];
 
 const missingEnv = requiredEnv.filter(

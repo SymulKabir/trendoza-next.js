@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import fs from "fs";
-import path from "path";
-import { APP_ROOT_DIRECTORY } from "@/src/constants/url";
+import path from "path"; 
+import { storageDir } from "@/src/utils/filePathProvider";
 
 export async function GET(
   req: NextRequest,
@@ -17,7 +17,7 @@ export async function GET(
   try {
     const { folder, filename } = await params;
 
-    const filePath = path.join(APP_ROOT_DIRECTORY, folder, filename);
+    const filePath = path.join(storageDir(), folder, filename);
 
     // ❌ file not found
     if (!fs.existsSync(filePath)) {

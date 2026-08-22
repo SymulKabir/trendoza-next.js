@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
-export default function MasalaSection() {
+export default function Index() {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-12 select-none space-y-16">
       {/* 1. TOP PROMOTIONAL BANNER */}
