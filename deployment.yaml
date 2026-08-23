@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /var/symul/storage
+    path: /var/symul/storage/fishlo
     type: DirectoryOrCreate
 
 ---
@@ -92,7 +92,7 @@ spec:
 
           volumeMounts:
             - name: fishlo-storage
-              mountPath: /app/storage
+              mountPath: /symul/storage/fishlo
 
       volumes:
         - name: fishlo-storage
