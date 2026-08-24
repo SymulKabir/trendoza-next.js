@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, Bell } from "lucide-react";
+import { TrendingUp, Bell, X } from "lucide-react";
 
 interface SearchItem {
   id: number;
@@ -15,8 +15,14 @@ interface SearchItem {
   hasAddButton: boolean;
 }
 
-const Index = ({ isOpen }: { isOpen: boolean }) => {
+interface SearchResultsProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Index = ({ isOpen, onClose }: SearchResultsProps) => {
   if (!isOpen) return null;
+
   const popularSearches = [
     "Pomfret",
     "Surmai",
@@ -26,7 +32,6 @@ const Index = ({ isOpen }: { isOpen: boolean }) => {
     "Lobster",
   ];
 
-  // Exact data from Screenshot 2026-06-15 at 12.00.36 PM.jpg
   const items: SearchItem[] = [
     {
       id: 1,
@@ -37,7 +42,7 @@ const Index = ({ isOpen }: { isOpen: boolean }) => {
       discount: "30% off",
       unit: "/500g",
       isOutOfStock: false,
-      hasAddButton: false, // matches empty status space from your capture
+      hasAddButton: false,
     },
     {
       id: 2,
@@ -117,8 +122,9 @@ const Index = ({ isOpen }: { isOpen: boolean }) => {
   ];
 
   return (
-    <div className="w-full bg-white py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased text-slate-800">
+    <div className="w-full bg-white py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased text-slate-800 border-b border-slate-200 shadow-xl relative animate-fadeIn">
       <div className="max-w-7xl mx-auto space-y-10">
+        
         {/* POPULAR SEARCHES CHIP BAR */}
         <div className="space-y-3">
           <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -137,12 +143,24 @@ const Index = ({ isOpen }: { isOpen: boolean }) => {
           </div>
         </div>
 
-        {/* SEARCH RESULTS METADATA LINE */}
-        <div className="flex items-baseline justify-between border-b border-slate-100 pb-3">
-          <h2 className="text-xl font-bold text-slate-800 tracking-tight">
-            Search Results
-          </h2>
-          <span className="text-xs font-medium text-slate-400">20 Items</span>
+        {/* SEARCH RESULTS METADATA LINE & CLOSE BUTTON */}
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="flex items-baseline gap-3">
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight">
+              Search Results
+            </h2>
+            <span className="text-xs font-medium text-slate-400">20 Items</span>
+          </div>
+
+          {/* Close Search Component Button */}
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors text-xs font-semibold cursor-pointer"
+            aria-label="Close search results"
+          >
+            <X size={15} />
+            <span>Close</span>
+          </button>
         </div>
 
         {/* RESULTS GRID PATTERN */}
@@ -150,7 +168,7 @@ const Index = ({ isOpen }: { isOpen: boolean }) => {
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-start gap-4 p-1 rounded-xl hover:bg-slate-50/50 transition-colors group"
+              className="flex items-start gap-4 p-2 rounded-xl border border-transparent hover:border-slate-100 hover:bg-slate-50/70 transition-all group"
             >
               {/* Image Box Section */}
               <div className="relative w-36 sm:w-44 aspect-[4/2.6] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60 shrink-0 shadow-3xs">

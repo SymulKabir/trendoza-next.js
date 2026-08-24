@@ -1,5 +1,6 @@
 "use client";
-import './style.scss'
+
+import "./style.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
@@ -16,25 +17,35 @@ const banners = [
 
 export default function HeroBanner() {
   return (
-    <section className="my-6">
+    <section className="my-6 w-full">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        loop={true}
+        loop
         navigation
         pagination={{ clickable: true }}
         autoplay={{
           delay: 4000,
           disableOnInteraction: false,
         }}
-        className="hero-slider rounded-2xl overflow-hidden"
+        className="hero-slider w-full overflow-hidden rounded-2xl"
       >
         {banners.map((banner) => (
           <SwiperSlide key={banner.id}>
-            <div className="w-full aspect-[16/6] max-h-300">
+            <div
+              className="
+                relative
+                w-full
+                h-[180px]
+                sm:h-[220px]
+                md:h-[300px]
+                lg:h-[380px]
+                xl:h-[420px]
+              "
+            >
               <img
                 src={`/assets/${banner.image}`}
                 alt={`Banner ${banner.id}`}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           </SwiperSlide>
